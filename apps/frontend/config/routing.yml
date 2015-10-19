@@ -6,11 +6,10 @@ homepage:
   url:   /
   param: { module: default, action: index }
 
-# generic rules
-# please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
-
-default:
-  url:   /:module/:action/*
+page:
+  url:   /:url
+  class:   sfDoctrineRoute
+  options: { model: page, type: object }
+  param: { module: page, action: show }
+  requirements:
+    url: .+
