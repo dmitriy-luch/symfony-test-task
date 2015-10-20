@@ -1,0 +1,9 @@
+newSuccess:
+  javascripts:
+    - /js/tinymce/js/tinymce/tinymce.min.js
+    - /js/tinymce/js/tinymce/themes/modern/theme.min.js
+
+editSuccess:
+  javascripts:
+    - /js/tinymce/js/tinymce/tinymce.min.js
+    - /js/tinymce/js/tinymce/themes/modern/theme.min.js

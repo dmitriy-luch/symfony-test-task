@@ -1,0 +1,8 @@
+page:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                page
+    module:               page
+    prefix_path:          /page
+    column:               id
+    with_wildcard_routes: true
