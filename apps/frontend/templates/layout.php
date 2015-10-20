@@ -10,5 +10,10 @@
   </head>
   <body>
     <?php echo $sf_content ?>
+    <footer>
+      <div class="content">
+        <?php include_component('language', 'language', ['redirect' => $sf_request->getUri()]) ?>
+      </div>
+    </footer>
   </body>
 </html>

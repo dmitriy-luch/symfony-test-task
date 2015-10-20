@@ -6,8 +6,12 @@ homepage:
   url:   /
   param: { module: default, action: index }
 
+change_language:
+  url:   /change_language
+  param: { module: language, action: changeLanguage }
+
 page:
-  url:   /:url
+  url:   /:sf_culture/:url
   class:   sfDoctrineRoute
   options: { model: page, type: object }
   param: { module: page, action: show }
