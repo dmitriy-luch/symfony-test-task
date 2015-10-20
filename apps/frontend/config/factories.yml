@@ -28,6 +28,12 @@ dev:
     param:
       delivery_strategy: none
 
+
+  i18n:
+    param:
+      cache:
+        class: sfNoCache
+
 all:
   routing:
     class: sfPatternRouting
@@ -40,3 +46,8 @@ all:
     param:
       cache_key_use_vary_headers: true
       cache_key_use_host_name:    true
+
+  i18n:
+    param:
+     source: MySQL
+     database: "mysql://root:root@localhost/shop"
