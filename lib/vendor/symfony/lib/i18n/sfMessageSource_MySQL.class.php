@@ -128,7 +128,8 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
    */
   function __destruct()
   {
-    @mysql_close($this->db);
+    //TODO: TMP Fix. Need to be refactored. http://trac.symfony-project.org/ticket/3277
+//    @mysql_close($this->db);
   }
 
   /**
@@ -219,6 +220,9 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
   public function &loadData($variant)
   {
     $variant = mysql_real_escape_string($variant, $this->db);
+
+    //TODO: TMP Fix. Need to be refactored. https://github.com/digibib/reaktorcms/blob/master/doc/patches/sfMessageSource_MySQL.class.php.utf8.patch
+    mysql_set_charset(sfConfig::get("sf_encoding", "utf8"), $this->db);
 
     $statement =
       "SELECT t.id, t.source, t.target, t.comments
