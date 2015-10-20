@@ -15,24 +15,30 @@ abstract class BasePageForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'         => new sfWidgetFormInputHidden(),
-      'title'      => new sfWidgetFormInputText(),
-      'url'        => new sfWidgetFormInputText(),
-      'meta'       => new sfWidgetFormInputText(),
-      'content'    => new sfWidgetFormTextarea(),
-      'created_at' => new sfWidgetFormDateTime(),
-      'updated_at' => new sfWidgetFormDateTime(),
+      'id'               => new sfWidgetFormInputHidden(),
+      'title'            => new sfWidgetFormInputText(),
+      'url'              => new sfWidgetFormInputText(),
+      'meta_description' => new sfWidgetFormInputText(),
+      'meta_keywords'    => new sfWidgetFormInputText(),
+      'content'          => new sfWidgetFormTextarea(),
+      'created_at'       => new sfWidgetFormDateTime(),
+      'updated_at'       => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
-      'id'         => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'title'      => new sfValidatorString(array('max_length' => 255)),
-      'url'        => new sfValidatorPass(array('required' => false)),
-      'meta'       => new sfValidatorPass(array('required' => false)),
-      'content'    => new sfValidatorString(array('required' => false)),
-      'created_at' => new sfValidatorDateTime(),
-      'updated_at' => new sfValidatorDateTime(),
+      'id'               => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'title'            => new sfValidatorString(array('max_length' => 255)),
+      'url'              => new sfValidatorPass(array('required' => false)),
+      'meta_description' => new sfValidatorPass(array('required' => false)),
+      'meta_keywords'    => new sfValidatorPass(array('required' => false)),
+      'content'          => new sfValidatorString(array('required' => false)),
+      'created_at'       => new sfValidatorDateTime(),
+      'updated_at'       => new sfValidatorDateTime(),
     ));
+
+    $this->validatorSchema->setPostValidator(
+      new sfValidatorDoctrineUnique(array('model' => 'Page', 'column' => array('url')))
+    );
 
     $this->widgetSchema->setNameFormat('page[%s]');
 

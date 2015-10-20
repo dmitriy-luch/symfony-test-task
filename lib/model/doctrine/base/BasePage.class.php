@@ -7,17 +7,20 @@
  * 
  * @property string $title
  * @property varchar $url
- * @property varchar $meta
+ * @property varchar $meta_description
+ * @property varchar $meta_keywords
  * @property string $content
  * 
- * @method string  getTitle()   Returns the current record's "title" value
- * @method varchar getUrl()     Returns the current record's "url" value
- * @method varchar getMeta()    Returns the current record's "meta" value
- * @method string  getContent() Returns the current record's "content" value
- * @method Page    setTitle()   Sets the current record's "title" value
- * @method Page    setUrl()     Sets the current record's "url" value
- * @method Page    setMeta()    Sets the current record's "meta" value
- * @method Page    setContent() Sets the current record's "content" value
+ * @method string  getTitle()            Returns the current record's "title" value
+ * @method varchar getUrl()              Returns the current record's "url" value
+ * @method varchar getMetaDescription()  Returns the current record's "meta_description" value
+ * @method varchar getMetaKeywords()     Returns the current record's "meta_keywords" value
+ * @method string  getContent()          Returns the current record's "content" value
+ * @method Page    setTitle()            Sets the current record's "title" value
+ * @method Page    setUrl()              Sets the current record's "url" value
+ * @method Page    setMetaDescription()  Sets the current record's "meta_description" value
+ * @method Page    setMetaKeywords()     Sets the current record's "meta_keywords" value
+ * @method Page    setContent()          Sets the current record's "content" value
  * 
  * @package    shop
  * @subpackage model
@@ -36,9 +39,14 @@ abstract class BasePage extends sfDoctrineRecord
              ));
         $this->hasColumn('url', 'varchar', 255, array(
              'type' => 'varchar',
+             'unique' => true,
              'length' => 255,
              ));
-        $this->hasColumn('meta', 'varchar', 255, array(
+        $this->hasColumn('meta_description', 'varchar', 255, array(
+             'type' => 'varchar',
+             'length' => 255,
+             ));
+        $this->hasColumn('meta_keywords', 'varchar', 255, array(
              'type' => 'varchar',
              'length' => 255,
              ));

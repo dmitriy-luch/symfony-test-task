@@ -14,5 +14,9 @@ class pageActions extends sfActions
   public function executeShow(sfWebRequest $request)
   {
     $this->page = $this->getRoute()->getObject();
+    $response = $this->getResponse();
+    $response->setTitle($this->page->getTitle());
+    $response->addMeta('description', $this->page->getMetaDescription());
+    $response->addMeta('keywords', $this->page->getMetaDescription());
   }
 }

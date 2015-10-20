@@ -12,9 +12,11 @@ default:
     #language:     en
     #robots:       index, follow
 
-  stylesheets:    [main.css]
+  stylesheets:
+    - main.css
 
-  javascripts:    []
+  javascripts:
+    - https://code.jquery.com/jquery-1.6.4.min.js
 
   has_layout:     true
   layout:         layout

@@ -3,5 +3,6 @@ Page:
   columns:
     title: { type: string(255), notnull: true }
     url: { type: varchar(255), unique: true }
-    meta: { type: varchar(255) }
+    meta_description: { type: varchar(255) }
+    meta_keywords: { type: varchar(255) }
     content: { type: string }
