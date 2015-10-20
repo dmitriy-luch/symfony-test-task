@@ -14,6 +14,10 @@
       <div class="content">
         <?php include_component('language', 'language', ['redirect' => $sf_request->getUri()]) ?>
       </div>
+      <?php
+        //Adding some text in footer to test i18n
+        echo __('Some custom footer text');
+      ?>
     </footer>
   </body>
 </html>
