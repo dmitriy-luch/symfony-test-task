@@ -9,6 +9,29 @@
     <?php include_javascripts() ?>
   </head>
   <body>
-    <?php echo $sf_content ?>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <?php if ($sf_user->isAuthenticated()): ?>
+          <ul class="nav">
+            <li><?php echo link_to('Pages', 'page') ?></li>
+            <li><?php echo link_to('Logout', 'sf_guard_signout') ?></li>
+          </ul>
+        <?php endif ?>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+      <div class="content">
+        <?php echo $sf_content ?>
+      </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <?= __('Some custom footer text') ?>
+    </div>
+  </footer>
   </body>
 </html>
