@@ -1149,7 +1149,17 @@ abstract class Doctrine_Query_Abstract
         $copy->free();
 
         if ($componentsBefore !== $componentsAfter) {
-            return array_diff($componentsAfter, $componentsBefore);
+            // Hotfix found here http://devyourdream.net/2012/10/04/doctrine-1-2-php-5-4-array-to-string-conversion-in-abstract-php/
+            $diff = array();
+
+            foreach($componentsAfter as $key => $val) {
+                if(!isset($componentsBefore[$key])) {
+                    $diff[$key] = $val;
+                } elseif(is_array($componentsBefore[$key]) && !is_array($val)) {
+                    $diff[$key] = $val;
+                }
+            }
+            return $diff;
         } else {
             return $componentsAfter;
         }
