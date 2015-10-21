@@ -10,6 +10,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     $this->enablePlugins('sfDoctrinePlugin');
     $this->enablePlugins('sfFormExtraPlugin');
     $this->enablePlugins('bootstrapAdminThemePlugin');
+    $this->enablePlugins('sfDoctrineGuardPlugin');
 
     // loadHelpers does not exists when running from CLI
     if(php_sapi_name() !== 'cli')
@@ -17,6 +18,5 @@ class ProjectConfiguration extends sfProjectConfiguration
       $this->loadHelpers(array('I18N'));
     }
 
-    $this->enablePlugins('sfDoctrineGuardPlugin');
   }
 }
