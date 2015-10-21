@@ -59,6 +59,14 @@ abstract class BasePage extends sfDoctrineRecord
     {
         parent::setUp();
         $timestampable0 = new Doctrine_Template_Timestampable();
+        $i18n0 = new Doctrine_Template_I18n(array(
+             'fields' => 
+             array(
+              0 => 'title',
+              1 => 'content',
+             ),
+             ));
         $this->actAs($timestampable0);
+        $this->actAs($i18n0);
     }
 }

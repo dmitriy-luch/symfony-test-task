@@ -4,14 +4,15 @@ class languageComponents extends sfComponents
 {
   public function executeLanguage(sfWebRequest $request)
   {
+    $languages = sfConfig::get('app_cultures_enabled', []);
+    $languageCodes = array_keys($languages);
 
-    $this->form = new sfFormLanguage(
+    $this->form = new sfFormLanguageCustom(
         $this->getUser(),
         [
-          'languages' => ['en', 'ru'],
+          'languages' => $languageCodes,
         ]
     );
-    $this->form->setDefault('redirect', $this->getVar('redirect'));
-    $this->form->setWidget('redirect', new sfWidgetFormInputHidden());
+    $this->form->setDefault('currentPage', $this->getVar('currentPage'));
   }
 }

@@ -1,0 +1,5 @@
+all:
+  cultures:
+    enabled:
+      en: English
+      ru: Russian

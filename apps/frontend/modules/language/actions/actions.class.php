@@ -10,27 +10,39 @@
  */
 class languageActions extends sfActions
 {
- /**
-  * Executes index action
-  *
-  * @param sfRequest $request A request object
-  */
-  public function executeIndex(sfWebRequest $request)
-  {
-    $this->forward('default', 'module');
-  }
-
   public function executeChangeLanguage(sfWebRequest $request)
   {
+    // Get current user culture
     $oldCulture = $this->getUser()->getCulture();
-    $form = new sfFormLanguage(
-        $this->getUser(),
-        array('languages' => array('en', 'ru'))
+
+    // Get enabled cultures from config
+    $languages = sfConfig::get('app_cultures_enabled', []);
+    $languageCodes = array_keys($languages);
+
+    $form = new sfFormLanguageCustom(
+      $this->getUser(),
+      array('languages' => $languageCodes)
     );
 
-    $form->process($request);
+    if(!$form->process($request)) {
+      $this->getUser()->setFlash('warning', __('Language change failed. Please try again.'));
+
+      // Redirecting to homepage by default
+      $redirect = 'homepage';
+
+      // If currentPage is provided but form is not valid. Redirect back to provided url.
+      if ($this->hasRequestParameter("currentPage"))
+      {
+        $redirect = $request->getParameter("currentPage");
+      }
+
+      // Redirecting
+      return $this->redirect($redirect);
+    }
+
+    // Get new user culture
     $newCulture = $this->getUser()->getCulture();
 
-    return $this->redirect(str_replace('/'.$oldCulture.'/', '/'.$newCulture.'/', $request->getParameter("redirect")));
+    return $this->redirect(str_replace('/'.$oldCulture.'/', '/'.$newCulture.'/', $request->getParameter("currentPage")));
   }
 }

@@ -19,6 +19,15 @@ class PageForm extends BasePageForm
             new sfValidatorRegex(['pattern' => '/^\S+$/'], ['invalid' => 'Your URL contains spaces. Please remove them first.'])
         ]
     );
-    $this->widgetSchema['content'] = new sfWidgetFormTextareaTinyMCE(['theme' => 'modern']);
+
+    $this->languages = sfConfig::get('app_cultures_enabled', []);
+
+    $languageCodes = array_keys($this->languages);
+    $this->embedI18n($languageCodes);
+    foreach($this->languages as $languageCode => $languageName)
+    {
+      $this->widgetSchema[$languageCode]->setLabel($languageName);
+      $this->widgetSchema[$languageCode]['content'] = new sfWidgetFormTextareaTinyMCE(['theme' => 'modern']);
+    }
   }
 }

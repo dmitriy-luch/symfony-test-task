@@ -7,13 +7,34 @@
  */
 class PageTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object PageTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('Page');
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object PageTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('Page');
+  }
+
+  /**
+   * @deprecated due to problems with i18n URLs
+   * Left for possibility to use it once i18n URLs issue is fixed
+   */
+  public function findByUrl($parameters)
+  {
+    throw new HttpException('Deprecated method', 500);
+    if (!isset($parameters['url']) || !isset($parameters['sf_culture'])) {
+        // Nothing to search for
+        return null;
     }
+    $culture = $parameters['sf_culture'];
+    $url = $parameters['url'];
+    $q = $this->createQuery('a')
+        ->innerJoin('a.Translation t')
+        ->andWhere('t.lang = ?', $culture)
+        ->andWhere('t.url = ?', $url);
+    return $q->fetchOne();
+  }
+
 }

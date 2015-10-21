@@ -1,5 +1,8 @@
 Page:
-  actAs: { Timestampable: ~ }
+  actAs:
+    Timestampable: ~
+    I18n:
+        fields: [ title, content ]
   columns:
     title: { type: string(255), notnull: true }
     url: { type: varchar(255), unique: true }
