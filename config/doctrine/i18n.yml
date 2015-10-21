@@ -1,0 +1,54 @@
+# TODO: Fix this yaml. It fails on extract task for some reason.
+Catalogue:
+  columns:
+    cat_id:
+      type: integer(8)
+      autoincrement: true
+      primary: true
+    name:
+      type: string(100)
+    source_lang:
+      type: string(100)
+    target_lang:
+      type: string(100)
+    date_created:
+      type: integer(11)
+    date_modified:
+      type: integer(11)
+    author:
+      type: string(255)
+  indexes:
+    cat_id:
+      fields: [cat_id]
+
+TransUnit:
+  columns:
+    msg_id:
+      type: integer(11)
+      autoincrement: true
+      primary: true
+    cat_id:
+      type: integer(8)
+    source:
+      type: clob
+    target:
+      type: clob
+    comments:
+      type: clob
+    date_added:
+      type: integer(11)
+    date_modified:
+      type: integer(11)
+    author:
+      type: string(255)
+    translated:
+      type: boolean
+      default: false
+  relations:
+    Catalogue:
+      local: cat_id
+      foreign: cat_id
+      foreignAlias: transUnit
+      type: one
+      foreignType: many
+      onDelete: CASCADE
