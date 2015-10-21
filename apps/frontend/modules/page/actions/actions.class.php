@@ -19,4 +19,8 @@ class pageActions extends sfActions
     $response->addMeta('description', $this->page->getMetaDescription());
     $response->addMeta('keywords', $this->page->getMetaDescription());
   }
+
+  public function executeIndex(sfWebRequest $request)
+  {
+  }
 }
