@@ -14,17 +14,18 @@
       <div id="logo">
         <h1><?= link_to(sfConfig::get('app_name', __('My project')), 'homepage')?></h1>
       </div>
-      <div class="messages">
-        <?php if ($sf_user->hasFlash('error')): ?>
-          <div class="flash_error"><?php echo $sf_user->getFlash('error') ?></div>
-        <?php endif ?>
-        <?php if ($sf_user->hasFlash('warning')): ?>
-          <div class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></div>
-        <?php endif ?>
-      </div>
       <div class="clr"></div>
     </div>
     <div class="content">
+      <?php include_component('page', 'menu') ?>
+      <div class="messages">
+        <?php if ($sf_user->hasFlash('error')): ?>
+          <h2 class="flash_error"><?php echo $sf_user->getFlash('error') ?></h2>
+        <?php endif ?>
+        <?php if ($sf_user->hasFlash('warning')): ?>
+          <h2 class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></h2>
+        <?php endif ?>
+      </div>
       <?php echo $sf_content ?>
     </div>
     <div id="footer">
