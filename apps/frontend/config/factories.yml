@@ -51,3 +51,7 @@ all:
     param:
      source: MySQL
      database: "mysql://root:root@localhost/shop"
+
+  storage:
+    param:
+      session_name: PHPSESSID_FRONT
