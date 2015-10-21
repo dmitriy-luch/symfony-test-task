@@ -9,23 +9,31 @@
     <?php include_javascripts() ?>
   </head>
   <body>
-    <header>
-      <?php if ($sf_user->hasFlash('error')): ?>
-        <div class="flash_error"><?php echo $sf_user->getFlash('error') ?></div>
-      <?php endif ?>
-      <?php if ($sf_user->hasFlash('warning')): ?>
-        <div class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></div>
-      <?php endif ?>
-    </header>
-    <?php echo $sf_content ?>
-    <footer>
-      <div class="content">
-        <?php include_component('language', 'language', ['currentPage' => $sf_request->getUri()]) ?>
+  <div id="wrapper">
+    <div id="header">
+      <div id="logo">
+        <h1><?= link_to(sfConfig::get('app_name', __('My project')), 'homepage')?></h1>
       </div>
+      <div class="messages">
+        <?php if ($sf_user->hasFlash('error')): ?>
+          <div class="flash_error"><?php echo $sf_user->getFlash('error') ?></div>
+        <?php endif ?>
+        <?php if ($sf_user->hasFlash('warning')): ?>
+          <div class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></div>
+        <?php endif ?>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="content">
+      <?php echo $sf_content ?>
+    </div>
+    <div id="footer">
+      <?php include_component('language', 'language', ['currentPage' => $sf_request->getUri()]) ?>
       <?php
-        //Adding some text in footer to test i18n
-        echo __('Some custom footer text');
+      //Adding some text in footer to test i18n
+      echo __('Some custom footer text');
       ?>
-    </footer>
+    </div>
+  </div>
   </body>
 </html>

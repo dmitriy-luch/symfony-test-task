@@ -5,3 +5,4 @@
 all:
   default_title: "Simple page"
   meta: "Simple page"
+  name: "Shop"
