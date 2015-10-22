@@ -18,5 +18,6 @@ class ProjectConfiguration extends sfProjectConfiguration
       $this->loadHelpers(array('I18N'));
     }
 
+    $this->enablePlugins('sfTaskExtraPlugin');
   }
 }
