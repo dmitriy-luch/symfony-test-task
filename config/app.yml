@@ -3,3 +3,8 @@ all:
     enabled:
       en: English
       ru: Russian
+
+  whmcs:
+    username: admin
+    password: admin
+    domain: whmcs.local

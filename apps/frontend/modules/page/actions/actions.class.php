@@ -22,5 +22,6 @@ class pageActions extends sfActions
 
   public function executeIndex(sfWebRequest $request)
   {
+    $this->currencies = PluginWhmcsConnection::initConnection()->getCurrencies();
   }
 }

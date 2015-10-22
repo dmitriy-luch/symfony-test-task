@@ -11,13 +11,13 @@ class ProjectConfiguration extends sfProjectConfiguration
     $this->enablePlugins('sfFormExtraPlugin');
     $this->enablePlugins('bootstrapAdminThemePlugin');
     $this->enablePlugins('sfDoctrineGuardPlugin');
+    $this->enablePlugins('sfTaskExtraPlugin');
+    $this->enablePlugins('sfWhmcsPlugin');
 
     // loadHelpers does not exists when running from CLI
     if(php_sapi_name() !== 'cli')
     {
       $this->loadHelpers(array('I18N'));
     }
-
-    $this->enablePlugins('sfTaskExtraPlugin');
   }
 }
