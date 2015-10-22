@@ -108,6 +108,8 @@ class PluginWhmcsConnection
 
   /**
    * Load list of WHMCS currencies and save into the object
+   *
+   * @return bool Whether the load was successful or not
    */
   protected function loadCurrencies()
   {
@@ -115,14 +117,17 @@ class PluginWhmcsConnection
     if($currencies->result != WHMCS_Base::SUCCESS)
     {
       // TODO: Log error. Request issues
-      $this->currencies = [];
+      $this->currencies = new PluginWhmcsCurrencies([]);
+      return false;
     }
     if(!isset($currencies->currencies) || !isset($currencies->currencies->currency))
     {
       // TODO: Log error. Some error occurred. No currencies provided by WHMCS
-      $this->currencies = [];
+      $this->currencies = new PluginWhmcsCurrencies([]);
+      return false;
     }
     // Save currencies array in the current connection instance
-    $this->currencies = $currencies->currencies->currency;
+    $this->currencies = new PluginWhmcsCurrencies($currencies->currencies->currency);
+    return true;
   }
 }
