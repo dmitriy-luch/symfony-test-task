@@ -44,6 +44,11 @@ class sfFormLanguageCustom extends sfFormLanguage
 
   public function save()
   {
+    // Notifying of culture change before the actual culture change
+    $event = new sfEvent(null, 'user.pre_change_culture', array('culture' => $this->user->getCulture()));
+    $dispatcher = frontendConfiguration::getActive()->getEventDispatcher();
+    $dispatcher->notify($event);
+
     parent::save();
     $this->user->setCurrency($this->getValue('currency'));
   }

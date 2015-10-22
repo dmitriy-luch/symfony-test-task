@@ -28,6 +28,14 @@ class PageForm extends BasePageForm
     {
       $this->widgetSchema[$languageCode]->setLabel($languageName);
       $this->widgetSchema[$languageCode]['content'] = new sfWidgetFormTextareaTinyMCE(['theme' => 'modern']);
+      // Leaving commented code for further usage once i18n issues with URLs is resolved
+//      $this->validatorSchema[$languageCode]['url'] = new sfValidatorAnd(
+//          [
+//              $this->validatorSchema[$languageCode]['url'],
+//              new sfValidatorRegex(['pattern' => '/^\S+$/'], ['invalid' => 'Your URL contains spaces. Please remove them first.'])
+//          ]
+//      );
+      // End of commented code
     }
   }
 }
