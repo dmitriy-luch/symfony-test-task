@@ -21,9 +21,9 @@ class PageTable extends Doctrine_Table
    * @deprecated due to problems with i18n URLs
    * Left for possibility to use it once i18n URLs issue is fixed
    */
-  public function findByUrl($parameters)
+  public function findOneByUrl($parameters)
   {
-    throw new HttpException('Deprecated method', 500);
+    throw new Exception('Deprecated method');
     if (!isset($parameters['url']) || !isset($parameters['sf_culture'])) {
         // Nothing to search for
         return null;
