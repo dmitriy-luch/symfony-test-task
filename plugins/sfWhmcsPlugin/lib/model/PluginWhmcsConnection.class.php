@@ -10,7 +10,7 @@
 class PluginWhmcsConnection
 {
   /**
-   * @var Instance of PluginWhmcsConnection connection class
+   * @var PluginWhmcsConnection Instance of PluginWhmcsConnection connection class
    */
   protected static $_instance;
 
@@ -23,6 +23,11 @@ class PluginWhmcsConnection
    * @var array List of currencies
    */
   protected $currencies = false;
+
+  /**
+   * @var string Currencies class name
+   */
+  protected $currenciesClass = 'PluginWhmcsCurrencies';
 
   /**
    * Class constructor
@@ -64,13 +69,27 @@ class PluginWhmcsConnection
     // Password is provided as the md5 hash
     define('WHMCS_PASSWORD', md5($config['password'])); // md5 hash
     $this->connectionConfig = $config;
+
+    // Override Currencies class name if one provided
+    if(isset($params['currenciesClass']))
+    {
+      $this->currenciesClass = $params['currenciesClass'];
+    }
   }
 
-  // Required by Singleton pattern
+  /**
+   * Overrode clone required by Singleton pattern
+   * @return bool
+   */
   public function __clone()
   {
     return false;
   }
+
+  /**
+   * Overrode clone required by Singleton pattern
+   * @return bool
+   */
   public function __wakeup()
   {
     return false;
@@ -113,21 +132,37 @@ class PluginWhmcsConnection
    */
   protected function loadCurrencies()
   {
-    $currencies = WHMCS_Misc::get_currencies();
-    if($currencies->result != WHMCS_Base::SUCCESS)
+    $currencies = $this->apiCall('WHMCS_Misc', 'get_currencies');
+    if (!$currencies)
     {
-      // TODO: Log error. Request issues
-      $this->currencies = new PluginWhmcsCurrencies([]);
-      return false;
+      $this->currencies = new $this->currenciesClass([]);
     }
+
     if(!isset($currencies->currencies) || !isset($currencies->currencies->currency))
     {
       // TODO: Log error. Some error occurred. No currencies provided by WHMCS
-      $this->currencies = new PluginWhmcsCurrencies([]);
+      $this->currencies = new $this->currenciesClass([]);
       return false;
     }
     // Save currencies array in the current connection instance
-    $this->currencies = new PluginWhmcsCurrencies($currencies->currencies->currency);
+    $this->currencies = new $this->currenciesClass($currencies->currencies->currency);
     return true;
+  }
+
+  /**
+   * @param string $class Class name to run api call in
+   * @param string $method Class method to run api call
+   * @param array $params An optional array of params to send to api call method
+   * @return bool|mixed Api call result or false in case of error
+   */
+  protected function apiCall($class, $method, $params = [])
+  {
+    $apiResult = call_user_func([$class, $method], $params);
+    if($apiResult->result != WHMCS_Base::SUCCESS)
+    {
+      // TODO: Log error. Request issues
+      return false;
+    }
+    return $apiResult;
   }
 }
