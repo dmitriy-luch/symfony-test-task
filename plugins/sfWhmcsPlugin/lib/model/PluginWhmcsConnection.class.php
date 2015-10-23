@@ -15,19 +15,14 @@ class PluginWhmcsConnection
   protected static $_instance;
 
   /**
-   * @var array Connection config details
+   * @var array Class config details
    */
-  protected $connectionConfig = [];
+  protected $config = [];
 
   /**
    * @var array List of currencies
    */
   protected $currencies = false;
-
-  /**
-   * @var string Currencies class name
-   */
-  protected $currenciesClass = 'PluginWhmcsCurrencies';
 
   /**
    * Class constructor
@@ -55,6 +50,7 @@ class PluginWhmcsConnection
       'password' => sfConfig::get('app_whmcs_password', 'admin'),
       'domain' => sfConfig::get('app_whmcs_domain', 'localhost'),
       'api_path' => sfConfig::get('app_whmcs_api_path', 'includes/api.php'),
+      'currencies_class' => sfConfig::get('app_whmcs_currencies_class', 'PluginWhmcsCurrencies'),
     ];
     // Override connection params with the provided ones
     $config = array_merge(
@@ -68,13 +64,7 @@ class PluginWhmcsConnection
     define('WHMCS_USERNAME', $config['username']);
     // Password is provided as the md5 hash
     define('WHMCS_PASSWORD', md5($config['password'])); // md5 hash
-    $this->connectionConfig = $config;
-
-    // Override Currencies class name if one provided
-    if(isset($params['currenciesClass']))
-    {
-      $this->currenciesClass = $params['currenciesClass'];
-    }
+    $this->config = $config;
   }
 
   /**
@@ -135,17 +125,17 @@ class PluginWhmcsConnection
     $currencies = $this->apiCall('WHMCS_Misc', 'get_currencies');
     if (!$currencies)
     {
-      $this->currencies = new $this->currenciesClass([]);
+      $this->currencies = new $this->config['currencies_class']([]);
     }
 
     if(!isset($currencies->currencies) || !isset($currencies->currencies->currency))
     {
       // TODO: Log error. Some error occurred. No currencies provided by WHMCS
-      $this->currencies = new $this->currenciesClass([]);
+      $this->currencies = new $this->config['currencies_class']([]);
       return false;
     }
     // Save currencies array in the current connection instance
-    $this->currencies = new $this->currenciesClass($currencies->currencies->currency);
+    $this->currencies = new $this->config['currencies_class']($currencies->currencies->currency);
     return true;
   }
 
