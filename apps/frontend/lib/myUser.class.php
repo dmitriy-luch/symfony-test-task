@@ -20,18 +20,18 @@ class myUser extends sfBasicSecurityUser
     return $currentCurrency;
   }
 
-  public function getHistoryCurrency($clearHistory = true)
+  public function getHistoryCultrure($clearHistory = true)
   {
-    $historyCurrency = null;
-    if($this->hasAttribute('currency'))
+    $historyCulture = null;
+    if($this->hasAttribute('historyCulture'))
     {
-      $historyCurrency = $this->getAttribute('historyCurrency');
+      $historyCulture = $this->getAttribute('historyCulture');
       if($clearHistory)
       {
-        $this->setAttribute('historyCurrency', null);
+        $this->setAttribute('historyCulture', null);
       }
     }
-    return $historyCurrency;
+    return $historyCulture;
   }
 
   public function setCurrency($currency)
@@ -48,7 +48,7 @@ class myUser extends sfBasicSecurityUser
     }
     else
     {
-      $this->setAttribute('historyCurrency', $parameters['currency']);
+      $this->setAttribute('historyCulture', $parameters['culture']);
     }
   }
 }
