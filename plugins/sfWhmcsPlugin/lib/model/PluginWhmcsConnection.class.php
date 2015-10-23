@@ -34,6 +34,7 @@ class PluginWhmcsConnection
    *  password - The password for WHMCS authentication
    *  domain   - The domain where WHMCS is installed
    *  api_path - The relative path on WHMCS website
+   *  currencies_class - Currencies list instance class
    *
    * @throws Exception When params are not an array
    */
