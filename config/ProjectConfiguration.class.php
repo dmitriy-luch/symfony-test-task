@@ -13,6 +13,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     $this->enablePlugins('sfDoctrineGuardPlugin');
     $this->enablePlugins('sfTaskExtraPlugin');
     $this->enablePlugins('sfWhmcsPlugin');
+    $this->enablePlugins('sfThumbnailPlugin');
 
     // loadHelpers does not exists when running from CLI
     if(php_sapi_name() !== 'cli')

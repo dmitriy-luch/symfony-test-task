@@ -7,6 +7,15 @@ page:
     column:               id
     with_wildcard_routes: true
 
+category:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                category
+    module:               category
+    prefix_path:          /category
+    column:               id
+    with_wildcard_routes: true
+
 sf_guard_signin:
   url:   /login
   param: { module: sfGuardAuth, action: signin }

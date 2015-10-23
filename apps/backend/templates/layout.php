@@ -15,6 +15,7 @@
         <?php if ($sf_user->isAuthenticated()): ?>
           <ul class="nav">
             <li><?php echo link_to('Pages', 'page') ?></li>
+            <li><?php echo link_to('Catgories', 'category') ?></li>
             <li><?php echo link_to('Logout', 'sf_guard_signout') ?></li>
           </ul>
         <?php endif ?>
