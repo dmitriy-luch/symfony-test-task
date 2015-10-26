@@ -1,12 +1,4 @@
 all:
-  whmcs:
-    class: sfDoctrineDatabase
-    param:
-      dsn: 'mysql:host=localhost;dbname=whmcs'
-      username: root
-      password: root
-      encoding: utf8
-
   doctrine:
     class: sfDoctrineDatabase
     param:
