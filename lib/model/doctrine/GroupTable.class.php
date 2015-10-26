@@ -16,4 +16,10 @@ class GroupTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Group');
     }
+
+    public function createQuery($alias = '')
+    {
+        $query = parent::createQuery($alias);
+        return $query->andWhere('hidden != ?', 'on');
+    }
 }
