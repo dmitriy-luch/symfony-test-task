@@ -7,6 +7,7 @@ Category:
     name: { type: string(255), notnull: true }
     is_shown_on_frontend: { type: boolean, notnull: true, default: false }
     is_popular: { type: boolean, notnull: true, default: false }
+    include_domains: { type: boolean, notnull: true, default: false }
     image: { type: string(255) }
   relations:
     Groups:

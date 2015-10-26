@@ -8,6 +8,7 @@
  * @property string $name
  * @property boolean $is_shown_on_frontend
  * @property boolean $is_popular
+ * @property boolean $include_domains
  * @property string $image
  * @property Doctrine_Collection $Groups
  * @property Doctrine_Collection $CategoryRelations
@@ -15,12 +16,14 @@
  * @method string              getName()                 Returns the current record's "name" value
  * @method boolean             getIsShownOnFrontend()    Returns the current record's "is_shown_on_frontend" value
  * @method boolean             getIsPopular()            Returns the current record's "is_popular" value
+ * @method boolean             getIncludeDomains()       Returns the current record's "include_domains" value
  * @method string              getImage()                Returns the current record's "image" value
  * @method Doctrine_Collection getGroups()               Returns the current record's "Groups" collection
  * @method Doctrine_Collection getCategoryRelations()    Returns the current record's "CategoryRelations" collection
  * @method Category            setName()                 Sets the current record's "name" value
  * @method Category            setIsShownOnFrontend()    Sets the current record's "is_shown_on_frontend" value
  * @method Category            setIsPopular()            Sets the current record's "is_popular" value
+ * @method Category            setIncludeDomains()       Sets the current record's "include_domains" value
  * @method Category            setImage()                Sets the current record's "image" value
  * @method Category            setGroups()               Sets the current record's "Groups" collection
  * @method Category            setCategoryRelations()    Sets the current record's "CategoryRelations" collection
@@ -46,6 +49,11 @@ abstract class BaseCategory extends sfDoctrineRecord
              'default' => false,
              ));
         $this->hasColumn('is_popular', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('include_domains', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
