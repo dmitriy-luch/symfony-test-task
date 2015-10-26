@@ -8,16 +8,34 @@ Category:
     is_shown_on_frontend: { type: boolean, notnull: true, default: false }
     is_popular: { type: boolean, notnull: true, default: false }
     image: { type: string(255) }
+  relations:
+    Groups:
+      class: Group
+      foreignAlias: Categories
+      refClass: CategoryRelations
+      local: category_id
+      foreign: whmcs_gid
+
+Group:
+  tableName: tblproductgroups
+  columns:
+    id: { type: integer, notnull: true, autoincrement: true, primary: true }
+    name: { type: string }
+    orderfrmtpl: { type: string }
+    disabledgateways: { type: string }
+    hidden: { type: string }
+    order: { type: int(1), default: 0}
 
 CategoryRelations:
   columns:
-    type: { type: integer(1), notnull: true }
     whmcs_gid: { type: integer }
-    category_id: { type: integer }
+    category_id: { type: integer, notnull: true }
   relations:
     Category:
-      foreignAlias: Criterias
       local: category_id
       foreign: id
-      type: one
-      foreignType: many
+      foreignAlias: CategoryRelations
+    Group:
+      local: whmcs_gid
+      foreign: id
+      foreignAlias: CategoryRelations

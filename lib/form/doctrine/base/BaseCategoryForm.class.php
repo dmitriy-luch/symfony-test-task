@@ -21,6 +21,7 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
       'image'                => new sfWidgetFormInputText(),
       'created_at'           => new sfWidgetFormDateTime(),
       'updated_at'           => new sfWidgetFormDateTime(),
+      'groups_list'          => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Group')),
     ));
 
     $this->setValidators(array(
@@ -30,6 +31,7 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
       'image'                => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'created_at'           => new sfValidatorDateTime(),
       'updated_at'           => new sfValidatorDateTime(),
+      'groups_list'          => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('category[%s]');
@@ -44,6 +46,62 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
   public function getModelName()
   {
     return 'Category';
+  }
+
+  public function updateDefaultsFromObject()
+  {
+    parent::updateDefaultsFromObject();
+
+    if (isset($this->widgetSchema['groups_list']))
+    {
+      $this->setDefault('groups_list', $this->object->Groups->getPrimaryKeys());
+    }
+
+  }
+
+  protected function doSave($con = null)
+  {
+    $this->saveGroupsList($con);
+
+    parent::doSave($con);
+  }
+
+  public function saveGroupsList($con = null)
+  {
+    if (!$this->isValid())
+    {
+      throw $this->getErrorSchema();
+    }
+
+    if (!isset($this->widgetSchema['groups_list']))
+    {
+      // somebody has unset this widget
+      return;
+    }
+
+    if (null === $con)
+    {
+      $con = $this->getConnection();
+    }
+
+    $existing = $this->object->Groups->getPrimaryKeys();
+    $values = $this->getValue('groups_list');
+    if (!is_array($values))
+    {
+      $values = array();
+    }
+
+    $unlink = array_diff($existing, $values);
+    if (count($unlink))
+    {
+      $this->object->unlink('Groups', array_values($unlink));
+    }
+
+    $link = array_diff($values, $existing);
+    if (count($link))
+    {
+      $this->object->link('Groups', array_values($link));
+    }
   }
 
 }

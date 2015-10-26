@@ -9,18 +9,21 @@
  * @property boolean $is_shown_on_frontend
  * @property boolean $is_popular
  * @property string $image
- * @property Doctrine_Collection $Criterias
+ * @property Doctrine_Collection $Groups
+ * @property Doctrine_Collection $CategoryRelations
  * 
  * @method string              getName()                 Returns the current record's "name" value
  * @method boolean             getIsShownOnFrontend()    Returns the current record's "is_shown_on_frontend" value
  * @method boolean             getIsPopular()            Returns the current record's "is_popular" value
  * @method string              getImage()                Returns the current record's "image" value
- * @method Doctrine_Collection getCriterias()            Returns the current record's "Criterias" collection
+ * @method Doctrine_Collection getGroups()               Returns the current record's "Groups" collection
+ * @method Doctrine_Collection getCategoryRelations()    Returns the current record's "CategoryRelations" collection
  * @method Category            setName()                 Sets the current record's "name" value
  * @method Category            setIsShownOnFrontend()    Sets the current record's "is_shown_on_frontend" value
  * @method Category            setIsPopular()            Sets the current record's "is_popular" value
  * @method Category            setImage()                Sets the current record's "image" value
- * @method Category            setCriterias()            Sets the current record's "Criterias" collection
+ * @method Category            setGroups()               Sets the current record's "Groups" collection
+ * @method Category            setCategoryRelations()    Sets the current record's "CategoryRelations" collection
  * 
  * @package    shop
  * @subpackage model
@@ -56,7 +59,12 @@ abstract class BaseCategory extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('CategoryRelations as Criterias', array(
+        $this->hasMany('Group as Groups', array(
+             'refClass' => 'CategoryRelations',
+             'local' => 'category_id',
+             'foreign' => 'whmcs_gid'));
+
+        $this->hasMany('CategoryRelations', array(
              'local' => 'id',
              'foreign' => 'category_id'));
 

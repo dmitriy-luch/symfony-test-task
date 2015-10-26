@@ -13,14 +13,12 @@ abstract class BaseCategoryRelationsFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'type'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'whmcs_gid'   => new sfWidgetFormFilterInput(),
+      'whmcs_gid'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Group'), 'add_empty' => true)),
       'category_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Category'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
-      'type'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'whmcs_gid'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'whmcs_gid'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Group'), 'column' => 'id')),
       'category_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Category'), 'column' => 'id')),
     ));
 
@@ -42,8 +40,7 @@ abstract class BaseCategoryRelationsFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id'          => 'Number',
-      'type'        => 'Number',
-      'whmcs_gid'   => 'Number',
+      'whmcs_gid'   => 'ForeignKey',
       'category_id' => 'ForeignKey',
     );
   }
