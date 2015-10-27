@@ -1,14 +1,14 @@
 <?php
 
 /**
- * CategoryTranslation filter form base class.
+ * ShopCategoryTranslation filter form base class.
  *
  * @package    shop
  * @subpackage filter
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseCategoryTranslationFormFilter extends BaseFormFilterDoctrine
+abstract class BaseShopCategoryTranslationFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
@@ -20,7 +20,7 @@ abstract class BaseCategoryTranslationFormFilter extends BaseFormFilterDoctrine
       'name' => new sfValidatorPass(array('required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('category_translation_filters[%s]');
+    $this->widgetSchema->setNameFormat('shop_category_translation_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -31,7 +31,7 @@ abstract class BaseCategoryTranslationFormFilter extends BaseFormFilterDoctrine
 
   public function getModelName()
   {
-    return 'CategoryTranslation';
+    return 'ShopCategoryTranslation';
   }
 
   public function getFields()

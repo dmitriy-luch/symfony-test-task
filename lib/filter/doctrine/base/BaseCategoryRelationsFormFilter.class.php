@@ -14,12 +14,12 @@ abstract class BaseCategoryRelationsFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'whmcs_gid'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Group'), 'add_empty' => true)),
-      'category_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Category'), 'add_empty' => true)),
+      'category_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ShopCategory'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
       'whmcs_gid'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Group'), 'column' => 'id')),
-      'category_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Category'), 'column' => 'id')),
+      'category_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('ShopCategory'), 'column' => 'id')),
     ));
 
     $this->widgetSchema->setNameFormat('category_relations_filters[%s]');

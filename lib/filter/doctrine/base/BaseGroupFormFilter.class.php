@@ -13,21 +13,21 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'name'             => new sfWidgetFormFilterInput(),
-      'orderfrmtpl'      => new sfWidgetFormFilterInput(),
-      'disabledgateways' => new sfWidgetFormFilterInput(),
-      'hidden'           => new sfWidgetFormFilterInput(),
-      'order'            => new sfWidgetFormFilterInput(),
-      'categories_list'  => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Category')),
+      'name'                 => new sfWidgetFormFilterInput(),
+      'orderfrmtpl'          => new sfWidgetFormFilterInput(),
+      'disabledgateways'     => new sfWidgetFormFilterInput(),
+      'hidden'               => new sfWidgetFormFilterInput(),
+      'order'                => new sfWidgetFormFilterInput(),
+      'shop_categories_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'ShopCategory')),
     ));
 
     $this->setValidators(array(
-      'name'             => new sfValidatorPass(array('required' => false)),
-      'orderfrmtpl'      => new sfValidatorPass(array('required' => false)),
-      'disabledgateways' => new sfValidatorPass(array('required' => false)),
-      'hidden'           => new sfValidatorPass(array('required' => false)),
-      'order'            => new sfValidatorPass(array('required' => false)),
-      'categories_list'  => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Category', 'required' => false)),
+      'name'                 => new sfValidatorPass(array('required' => false)),
+      'orderfrmtpl'          => new sfValidatorPass(array('required' => false)),
+      'disabledgateways'     => new sfValidatorPass(array('required' => false)),
+      'hidden'               => new sfValidatorPass(array('required' => false)),
+      'order'                => new sfValidatorPass(array('required' => false)),
+      'shop_categories_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopCategory', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('group_filters[%s]');
@@ -39,7 +39,7 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
     parent::setup();
   }
 
-  public function addCategoriesListColumnQuery(Doctrine_Query $query, $field, $values)
+  public function addShopCategoriesListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
     {
@@ -65,13 +65,13 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'               => 'Number',
-      'name'             => 'Text',
-      'orderfrmtpl'      => 'Text',
-      'disabledgateways' => 'Text',
-      'hidden'           => 'Text',
-      'order'            => 'Text',
-      'categories_list'  => 'ManyKey',
+      'id'                   => 'Number',
+      'name'                 => 'Text',
+      'orderfrmtpl'          => 'Text',
+      'disabledgateways'     => 'Text',
+      'hidden'               => 'Text',
+      'order'                => 'Text',
+      'shop_categories_list' => 'ManyKey',
     );
   }
 }

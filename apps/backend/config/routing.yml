@@ -1,18 +1,18 @@
+shop_category:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                ShopCategory
+    module:               ShopCategory
+    prefix_path:          /ShopCategory
+    column:               id
+    with_wildcard_routes: true
+
 page:
   class: sfDoctrineRouteCollection
   options:
     model:                page
     module:               page
     prefix_path:          /page
-    column:               id
-    with_wildcard_routes: true
-
-category:
-  class: sfDoctrineRouteCollection
-  options:
-    model:                category
-    module:               category
-    prefix_path:          /category
     column:               id
     with_wildcard_routes: true
 

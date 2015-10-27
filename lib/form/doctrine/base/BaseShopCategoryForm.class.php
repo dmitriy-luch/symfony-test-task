@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Category form base class.
+ * ShopCategory form base class.
  *
- * @method Category getObject() Returns the current form's model object
+ * @method ShopCategory getObject() Returns the current form's model object
  *
  * @package    shop
  * @subpackage form
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseCategoryForm extends BaseFormDoctrine
+abstract class BaseShopCategoryForm extends BaseFormDoctrine
 {
   public function setup()
   {
@@ -19,6 +19,7 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
       'is_shown_on_frontend' => new sfWidgetFormInputCheckbox(),
       'is_popular'           => new sfWidgetFormInputCheckbox(),
       'include_domains'      => new sfWidgetFormInputCheckbox(),
+      'special'              => new sfWidgetFormInputCheckbox(),
       'image'                => new sfWidgetFormInputText(),
       'created_at'           => new sfWidgetFormDateTime(),
       'updated_at'           => new sfWidgetFormDateTime(),
@@ -30,13 +31,14 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
       'is_shown_on_frontend' => new sfValidatorBoolean(array('required' => false)),
       'is_popular'           => new sfValidatorBoolean(array('required' => false)),
       'include_domains'      => new sfValidatorBoolean(array('required' => false)),
+      'special'              => new sfValidatorBoolean(array('required' => false)),
       'image'                => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'created_at'           => new sfValidatorDateTime(),
       'updated_at'           => new sfValidatorDateTime(),
       'groups_list'          => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('category[%s]');
+    $this->widgetSchema->setNameFormat('shop_category[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -47,7 +49,7 @@ abstract class BaseCategoryForm extends BaseFormDoctrine
 
   public function getModelName()
   {
-    return 'Category';
+    return 'ShopCategory';
   }
 
   public function updateDefaultsFromObject()

@@ -7,17 +7,17 @@
  * 
  * @property integer $whmcs_gid
  * @property integer $category_id
- * @property Category $Category
+ * @property ShopCategory $ShopCategory
  * @property Group $Group
  * 
- * @method integer           getWhmcsGid()    Returns the current record's "whmcs_gid" value
- * @method integer           getCategoryId()  Returns the current record's "category_id" value
- * @method Category          getCategory()    Returns the current record's "Category" value
- * @method Group             getGroup()       Returns the current record's "Group" value
- * @method CategoryRelations setWhmcsGid()    Sets the current record's "whmcs_gid" value
- * @method CategoryRelations setCategoryId()  Sets the current record's "category_id" value
- * @method CategoryRelations setCategory()    Sets the current record's "Category" value
- * @method CategoryRelations setGroup()       Sets the current record's "Group" value
+ * @method integer           getWhmcsGid()     Returns the current record's "whmcs_gid" value
+ * @method integer           getCategoryId()   Returns the current record's "category_id" value
+ * @method ShopCategory      getShopCategory() Returns the current record's "ShopCategory" value
+ * @method Group             getGroup()        Returns the current record's "Group" value
+ * @method CategoryRelations setWhmcsGid()     Sets the current record's "whmcs_gid" value
+ * @method CategoryRelations setCategoryId()   Sets the current record's "category_id" value
+ * @method CategoryRelations setShopCategory() Sets the current record's "ShopCategory" value
+ * @method CategoryRelations setGroup()        Sets the current record's "Group" value
  * 
  * @package    shop
  * @subpackage model
@@ -41,7 +41,7 @@ abstract class BaseCategoryRelations extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('Category', array(
+        $this->hasOne('ShopCategory', array(
              'local' => 'category_id',
              'foreign' => 'id'));
 

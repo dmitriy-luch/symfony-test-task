@@ -1,4 +1,4 @@
-Category:
+ShopCategory:
   actAs:
     Timestampable: ~
     I18n:
@@ -8,11 +8,12 @@ Category:
     is_shown_on_frontend: { type: boolean, notnull: true, default: false }
     is_popular: { type: boolean, notnull: true, default: false }
     include_domains: { type: boolean, notnull: true, default: false }
+    special: { type: boolean, notnull: true, default: false }
     image: { type: string(255) }
   relations:
     Groups:
       class: Group
-      foreignAlias: Categories
+      foreignAlias: ShopCategories
       refClass: CategoryRelations
       local: category_id
       foreign: whmcs_gid
@@ -32,7 +33,7 @@ CategoryRelations:
     whmcs_gid: { type: integer }
     category_id: { type: integer, notnull: true }
   relations:
-    Category:
+    ShopCategory:
       local: category_id
       foreign: id
       foreignAlias: CategoryRelations

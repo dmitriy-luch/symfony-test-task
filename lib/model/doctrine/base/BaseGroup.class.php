@@ -11,7 +11,7 @@
  * @property string $disabledgateways
  * @property string $hidden
  * @property int $order
- * @property Doctrine_Collection $Categories
+ * @property Doctrine_Collection $ShopCategories
  * @property Doctrine_Collection $CategoryRelations
  * 
  * @method integer             getId()                Returns the current record's "id" value
@@ -20,7 +20,7 @@
  * @method string              getDisabledgateways()  Returns the current record's "disabledgateways" value
  * @method string              getHidden()            Returns the current record's "hidden" value
  * @method int                 getOrder()             Returns the current record's "order" value
- * @method Doctrine_Collection getCategories()        Returns the current record's "Categories" collection
+ * @method Doctrine_Collection getShopCategories()    Returns the current record's "ShopCategories" collection
  * @method Doctrine_Collection getCategoryRelations() Returns the current record's "CategoryRelations" collection
  * @method Group               setId()                Sets the current record's "id" value
  * @method Group               setName()              Sets the current record's "name" value
@@ -28,7 +28,7 @@
  * @method Group               setDisabledgateways()  Sets the current record's "disabledgateways" value
  * @method Group               setHidden()            Sets the current record's "hidden" value
  * @method Group               setOrder()             Sets the current record's "order" value
- * @method Group               setCategories()        Sets the current record's "Categories" collection
+ * @method Group               setShopCategories()    Sets the current record's "ShopCategories" collection
  * @method Group               setCategoryRelations() Sets the current record's "CategoryRelations" collection
  * 
  * @package    shop
@@ -68,7 +68,7 @@ abstract class BaseGroup extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('Category as Categories', array(
+        $this->hasMany('ShopCategory as ShopCategories', array(
              'refClass' => 'CategoryRelations',
              'local' => 'whmcs_gid',
              'foreign' => 'category_id'));

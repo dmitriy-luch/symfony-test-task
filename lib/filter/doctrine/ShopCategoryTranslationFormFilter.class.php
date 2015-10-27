@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Category filter form.
+ * ShopCategoryTranslation filter form.
  *
  * @package    shop
  * @subpackage filter
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class CategoryFormFilter extends BaseCategoryFormFilter
+class ShopCategoryTranslationFormFilter extends BaseShopCategoryTranslationFormFilter
 {
   public function configure()
   {

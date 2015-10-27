@@ -1,16 +1,16 @@
 <?php
 
 /**
- * CategoryTranslation form base class.
+ * ShopCategoryTranslation form base class.
  *
- * @method CategoryTranslation getObject() Returns the current form's model object
+ * @method ShopCategoryTranslation getObject() Returns the current form's model object
  *
  * @package    shop
  * @subpackage form
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseCategoryTranslationForm extends BaseFormDoctrine
+abstract class BaseShopCategoryTranslationForm extends BaseFormDoctrine
 {
   public function setup()
   {
@@ -26,7 +26,7 @@ abstract class BaseCategoryTranslationForm extends BaseFormDoctrine
       'lang' => new sfValidatorChoice(array('choices' => array($this->getObject()->get('lang')), 'empty_value' => $this->getObject()->get('lang'), 'required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('category_translation[%s]');
+    $this->widgetSchema->setNameFormat('shop_category_translation[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -37,7 +37,7 @@ abstract class BaseCategoryTranslationForm extends BaseFormDoctrine
 
   public function getModelName()
   {
-    return 'CategoryTranslation';
+    return 'ShopCategoryTranslation';
   }
 
 }
