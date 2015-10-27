@@ -17,7 +17,7 @@
       <div class="clr"></div>
     </div>
     <div class="content">
-      <?php include_component('page', 'menu') ?>
+      <?php include_component('Page', 'menu') ?>
       <div class="messages">
         <?php if ($sf_user->hasFlash('error')): ?>
           <h2 class="flash_error"><?php echo $sf_user->getFlash('error') ?></h2>

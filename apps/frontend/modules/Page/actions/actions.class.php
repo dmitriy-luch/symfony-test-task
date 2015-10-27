@@ -1,14 +1,14 @@
 <?php
 
 /**
- * page actions.
+ * Page actions.
  *
  * @package    shop
- * @subpackage page
+ * @subpackage Page
  * @author     Dmitriy
  * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class pageActions extends sfActions
+class PageActions extends sfActions
 {
 
   public function executeShow(sfWebRequest $request)

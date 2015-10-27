@@ -1,11 +1,11 @@
 <?php
 
-class pageComponents extends sfComponents
+class PageComponents extends sfComponents
 {
   public function executeMenu(sfWebRequest $request)
   {
     $currentUri = $request->getUri();
-    $pages = Doctrine::getTable('page')->findAll();
+    $pages = Doctrine::getTable('Page')->findAll();
     $this->menuItems = [];
     foreach($pages as $page)
     {
