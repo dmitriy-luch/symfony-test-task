@@ -1,13 +1,13 @@
 generator:
   class: sfDoctrineGenerator
   param:
-    model_class:           page
+    model_class:           Page
     theme:                 bootstrap
     non_verbose_templates: true
     with_show:             false
     singular:              ~
     plural:                ~
-    route_prefix:          page
+    route_prefix:          backend_page
     with_doctrine_route:   true
     actions_base_class:    sfActions
 
@@ -15,8 +15,11 @@ generator:
       actions: ~
       fields:  ~
       list:
+        title: 'Page list'
         display: [=title, url, created_at, updated_at]
       filter:  ~
       form:    ~
-      edit:    ~
-      new:     ~
+      edit:
+        title: 'Edit Page'
+      new:
+        title: 'New Page'

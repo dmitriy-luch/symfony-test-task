@@ -7,11 +7,11 @@ shop_category:
     column:               id
     with_wildcard_routes: true
 
-page:
+backend_page:
   class: sfDoctrineRouteCollection
   options:
-    model:                page
-    module:               page
+    model:                Page
+    module:               BackendPage
     prefix_path:          /page
     column:               id
     with_wildcard_routes: true
@@ -28,4 +28,4 @@ sf_guard_signout:
 # default rules
 homepage:
   url:   /
-  param: { module: page, action: index }
+  param: { module: BackendPage, action: index }
