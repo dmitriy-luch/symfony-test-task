@@ -23,7 +23,7 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
       'image'                => new sfWidgetFormInputText(),
       'created_at'           => new sfWidgetFormDateTime(),
       'updated_at'           => new sfWidgetFormDateTime(),
-      'groups_list'          => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Group')),
+      'shop_groups_list'     => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup')),
     ));
 
     $this->setValidators(array(
@@ -35,7 +35,7 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
       'image'                => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'created_at'           => new sfValidatorDateTime(),
       'updated_at'           => new sfValidatorDateTime(),
-      'groups_list'          => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
+      'shop_groups_list'     => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('shop_category[%s]');
@@ -56,28 +56,28 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
   {
     parent::updateDefaultsFromObject();
 
-    if (isset($this->widgetSchema['groups_list']))
+    if (isset($this->widgetSchema['shop_groups_list']))
     {
-      $this->setDefault('groups_list', $this->object->Groups->getPrimaryKeys());
+      $this->setDefault('shop_groups_list', $this->object->ShopGroups->getPrimaryKeys());
     }
 
   }
 
   protected function doSave($con = null)
   {
-    $this->saveGroupsList($con);
+    $this->saveShopGroupsList($con);
 
     parent::doSave($con);
   }
 
-  public function saveGroupsList($con = null)
+  public function saveShopGroupsList($con = null)
   {
     if (!$this->isValid())
     {
       throw $this->getErrorSchema();
     }
 
-    if (!isset($this->widgetSchema['groups_list']))
+    if (!isset($this->widgetSchema['shop_groups_list']))
     {
       // somebody has unset this widget
       return;
@@ -88,8 +88,8 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
       $con = $this->getConnection();
     }
 
-    $existing = $this->object->Groups->getPrimaryKeys();
-    $values = $this->getValue('groups_list');
+    $existing = $this->object->ShopGroups->getPrimaryKeys();
+    $values = $this->getValue('shop_groups_list');
     if (!is_array($values))
     {
       $values = array();
@@ -98,13 +98,13 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
     $unlink = array_diff($existing, $values);
     if (count($unlink))
     {
-      $this->object->unlink('Groups', array_values($unlink));
+      $this->object->unlink('ShopGroups', array_values($unlink));
     }
 
     $link = array_diff($values, $existing);
     if (count($link))
     {
-      $this->object->link('Groups', array_values($link));
+      $this->object->link('ShopGroups', array_values($link));
     }
   }
 

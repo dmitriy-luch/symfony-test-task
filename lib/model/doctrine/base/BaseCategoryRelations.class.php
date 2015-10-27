@@ -8,16 +8,16 @@
  * @property integer $whmcs_gid
  * @property integer $category_id
  * @property ShopCategory $ShopCategory
- * @property Group $Group
+ * @property ShopGroup $ShopGroup
  * 
  * @method integer           getWhmcsGid()     Returns the current record's "whmcs_gid" value
  * @method integer           getCategoryId()   Returns the current record's "category_id" value
  * @method ShopCategory      getShopCategory() Returns the current record's "ShopCategory" value
- * @method Group             getGroup()        Returns the current record's "Group" value
+ * @method ShopGroup         getShopGroup()    Returns the current record's "ShopGroup" value
  * @method CategoryRelations setWhmcsGid()     Sets the current record's "whmcs_gid" value
  * @method CategoryRelations setCategoryId()   Sets the current record's "category_id" value
  * @method CategoryRelations setShopCategory() Sets the current record's "ShopCategory" value
- * @method CategoryRelations setGroup()        Sets the current record's "Group" value
+ * @method CategoryRelations setShopGroup()    Sets the current record's "ShopGroup" value
  * 
  * @package    shop
  * @subpackage model
@@ -45,7 +45,7 @@ abstract class BaseCategoryRelations extends sfDoctrineRecord
              'local' => 'category_id',
              'foreign' => 'id'));
 
-        $this->hasOne('Group', array(
+        $this->hasOne('ShopGroup', array(
              'local' => 'whmcs_gid',
              'foreign' => 'id'));
     }

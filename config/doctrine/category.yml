@@ -11,14 +11,14 @@ ShopCategory:
     special: { type: boolean, notnull: true, default: false }
     image: { type: string(255) }
   relations:
-    Groups:
-      class: Group
+    ShopGroups:
+      class: ShopGroup
       foreignAlias: ShopCategories
       refClass: CategoryRelations
       local: category_id
       foreign: whmcs_gid
 
-Group:
+ShopGroup:
   tableName: tblproductgroups
   columns:
     id: { type: integer, notnull: true, autoincrement: true, primary: true }
@@ -37,7 +37,7 @@ CategoryRelations:
       local: category_id
       foreign: id
       foreignAlias: CategoryRelations
-    Group:
+    ShopGroup:
       local: whmcs_gid
       foreign: id
       foreignAlias: CategoryRelations

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Group filter form base class.
+ * ShopGroup filter form base class.
  *
  * @package    shop
  * @subpackage filter
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
+abstract class BaseShopGroupFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
@@ -30,7 +30,7 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
       'shop_categories_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopCategory', 'required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('group_filters[%s]');
+    $this->widgetSchema->setNameFormat('shop_group_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -59,7 +59,7 @@ abstract class BaseGroupFormFilter extends BaseFormFilterDoctrine
 
   public function getModelName()
   {
-    return 'Group';
+    return 'ShopGroup';
   }
 
   public function getFields()

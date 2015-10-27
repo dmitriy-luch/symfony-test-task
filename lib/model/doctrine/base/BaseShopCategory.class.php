@@ -11,7 +11,7 @@
  * @property boolean $include_domains
  * @property boolean $special
  * @property string $image
- * @property Doctrine_Collection $Groups
+ * @property Doctrine_Collection $ShopGroups
  * @property Doctrine_Collection $CategoryRelations
  * 
  * @method string              getName()                 Returns the current record's "name" value
@@ -20,7 +20,7 @@
  * @method boolean             getIncludeDomains()       Returns the current record's "include_domains" value
  * @method boolean             getSpecial()              Returns the current record's "special" value
  * @method string              getImage()                Returns the current record's "image" value
- * @method Doctrine_Collection getGroups()               Returns the current record's "Groups" collection
+ * @method Doctrine_Collection getShopGroups()           Returns the current record's "ShopGroups" collection
  * @method Doctrine_Collection getCategoryRelations()    Returns the current record's "CategoryRelations" collection
  * @method ShopCategory        setName()                 Sets the current record's "name" value
  * @method ShopCategory        setIsShownOnFrontend()    Sets the current record's "is_shown_on_frontend" value
@@ -28,7 +28,7 @@
  * @method ShopCategory        setIncludeDomains()       Sets the current record's "include_domains" value
  * @method ShopCategory        setSpecial()              Sets the current record's "special" value
  * @method ShopCategory        setImage()                Sets the current record's "image" value
- * @method ShopCategory        setGroups()               Sets the current record's "Groups" collection
+ * @method ShopCategory        setShopGroups()           Sets the current record's "ShopGroups" collection
  * @method ShopCategory        setCategoryRelations()    Sets the current record's "CategoryRelations" collection
  * 
  * @package    shop
@@ -75,7 +75,7 @@ abstract class BaseShopCategory extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('Group as Groups', array(
+        $this->hasMany('ShopGroup as ShopGroups', array(
              'refClass' => 'CategoryRelations',
              'local' => 'category_id',
              'foreign' => 'whmcs_gid'));

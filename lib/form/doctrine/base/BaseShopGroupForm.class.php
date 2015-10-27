@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Group form base class.
+ * ShopGroup form base class.
  *
- * @method Group getObject() Returns the current form's model object
+ * @method ShopGroup getObject() Returns the current form's model object
  *
  * @package    shop
  * @subpackage form
  * @author     Dmitriy
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseGroupForm extends BaseFormDoctrine
+abstract class BaseShopGroupForm extends BaseFormDoctrine
 {
   public function setup()
   {
@@ -34,7 +34,7 @@ abstract class BaseGroupForm extends BaseFormDoctrine
       'shop_categories_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopCategory', 'required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('group[%s]');
+    $this->widgetSchema->setNameFormat('shop_group[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -45,7 +45,7 @@ abstract class BaseGroupForm extends BaseFormDoctrine
 
   public function getModelName()
   {
-    return 'Group';
+    return 'ShopGroup';
   }
 
   public function updateDefaultsFromObject()
