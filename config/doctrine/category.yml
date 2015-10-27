@@ -27,6 +27,14 @@ ShopGroup:
     disabledgateways: { type: string }
     hidden: { type: string }
     order: { type: int(1), default: 0}
+  relations:
+    WhmcsProductInternals:
+      class: WhmcsProductInternal
+      foreignAlias: ShopGroup
+      local: id
+      foreign: gid
+      type: many
+      foreignType: one
 
 CategoryRelations:
   columns:

@@ -22,6 +22,9 @@ class PageActions extends sfActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->currencies = PluginWhmcsConnection::initConnection()->getCurrencies();
+    // Current user currency to use in View
+    $this->currentCurrency = PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getUser()->getCurrency());
+    // All frontend categories
+    $this->categories = Doctrine::getTable('ShopCategory')->findAllFrontend(sfConfig::get('app_homepage_categories_count', 3));
   }
 }

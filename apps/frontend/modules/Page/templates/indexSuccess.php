@@ -1,11 +1,18 @@
 <div id="pitch">
-    <p>This is the HomePage!</p>
-    <p>Our shop has <?= (count($currencies))? 'a lot of' : 'not any' ?> currencies!</p>
-    <?php if(count($currencies)): ?>
+    <p><?= __('Popular categories') ?></p>
+    <?php if(count($categories)): ?>
         <ul>
-        <?php foreach($currencies as $currency): ?>
-            <li><?= $currency->code ?></li>
-        <?php endforeach; ?>
+            <?php foreach($categories as $category): ?>
+                <li>
+                    <?= $category->name ?>
+                    <?php if($category->getCheapestPrice($sf_user->getCurrencyId())): ?>
+                    <span>
+                        <?= __('Price starts from')?> <?= $category->getCheapestPrice($sf_user->getCurrencyId()) ?> <?= $currentCurrency->suffix?>
+                    </span>
+                    <?php endif;?>
+                    <?= image_tag($category->getWebImagePath(true)); ?>
+                </li>
+            <?php endforeach; ?>
         </ul>
     <?php endif ?>
 </div>

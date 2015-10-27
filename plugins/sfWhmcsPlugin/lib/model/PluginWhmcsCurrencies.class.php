@@ -33,7 +33,7 @@ class PluginWhmcsCurrencies implements Iterator
     foreach ($currencies as $currency)
     {
       // Save currencies indexed by their code
-      $this->currencies[(int)$currency->id] = $currency;
+      $this->currencies[(string)$currency->code] = $currency;
     }
   }
 
@@ -65,8 +65,7 @@ class PluginWhmcsCurrencies implements Iterator
    */
   public function findByCode($code)
   {
-    $codeKey = array_search($code, $this->values());
-    return ($codeKey !== false)? $this->currencies[$codeKey] : null;
+    return (isset($this->currencies[$code]))? $this->currencies[$code] : null;
   }
 
 

@@ -43,4 +43,24 @@ class ShopCategoryTable extends Doctrine_Table
     {
         return $this->findOneBy('special', 1);
     }
+
+    /**
+     * A list of Categories that have Popular and Shown on Frontend flags enabled
+     *
+     * @param int $limit Limit the number of categories. Unlimited if null
+     * @return Doctrine_Collection List of Categories
+     * @throws Doctrine_Query_Exception
+     */
+    public function findAllFrontend($limit = null)
+    {
+        $query = $this->createQuery('c')
+            ->andWhere('c.is_shown_on_frontend = ?', true)
+            ->andWhere('c.is_popular = ?', true);
+        if($limit)
+        {
+            $query->limit($limit);
+        }
+        // TODO: Save result to cache
+        return $query->execute();
+    }
 }

@@ -21,4 +21,14 @@ class ProjectConfiguration extends sfProjectConfiguration
       $this->loadHelpers(array('I18N'));
     }
   }
+
+  public function configureDoctrine()
+  {
+    // Hack for doctrine:build-schema to work with WHMCS tables. http://stackoverflow.com/a/7451729
+    // TODO: Make sure these works as expected
+    if(php_sapi_name() == "cli")
+    {
+      Doctrine_Manager::getInstance()->setAttribute(Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, false);
+    }
+  }
 }

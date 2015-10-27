@@ -20,6 +20,16 @@ class myUser extends sfBasicSecurityUser
     return $currentCurrency;
   }
 
+  /**
+   * Current User currency WHMCS id
+   *
+   * @return int WHMCS id
+   */
+  public function getCurrencyId()
+  {
+    return (int)PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getCurrency())->id;
+  }
+
   public function getHistoryCultrure($clearHistory = true)
   {
     $historyCulture = null;

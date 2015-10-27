@@ -67,4 +67,44 @@ class ShopCategory extends BaseShopCategory
     }
     return sfConfig::get('app_category_upload_dir', '/uploads/categories');
   }
+
+  /**
+   * Current Category WHMCS Group Ids
+   *
+   * @return array WHMCS Group Ids
+   */
+  public function getGroupIds()
+  {
+    return $this->getShopGroups()->getPrimaryKeys();
+  }
+
+  // Leaving commented since it might be useful in future
+//  public function getProductInternals()
+//  {
+//    $query = Doctrine::getTable('WhmcsProductInternal')
+//        ->createQuery('p')
+//        ->andWhereIn('gid', $this->getGroupIds());
+//    return $query->execute();
+//  }
+  // End of commented code
+
+  /**
+   * Cheapest price among all Category Group Products (and Domains)
+   *
+   * @param $currency WHMCS Currency ID
+   * @return mixed Price
+   */
+  public function getCheapestPrice($currency)
+  {
+    $config = [
+        'groups' => $this->getGroupIds(),
+        'domains' => $this->getIncludeDomains(),
+        'currency' => $currency,
+    ];
+
+    $result = Doctrine::getTable('WhmcsPrice')->getCheapestProductsPrices($config);
+    $cheapest = reset($result);
+    // TODO: Save value to cache for further usage
+    return $cheapest;
+  }
 }
