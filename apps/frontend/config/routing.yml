@@ -8,7 +8,7 @@ homepage:
 
 change_language:
   url:   /change_language
-  param: { module: language, action: changeLanguage }
+  param: { module: Language, action: changeLanguage }
 
 page:
   url:   /:sf_culture/:url

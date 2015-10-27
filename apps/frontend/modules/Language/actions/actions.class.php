@@ -1,14 +1,14 @@
 <?php
 
 /**
- * language actions.
+ * Language actions.
  *
  * @package    shop
- * @subpackage language
+ * @subpackage Language
  * @author     Dmitriy
  * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class languageActions extends sfActions
+class LanguageActions extends sfActions
 {
   public function executeChangeLanguage(sfWebRequest $request)
   {

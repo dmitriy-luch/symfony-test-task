@@ -1,6 +1,6 @@
 <?php
 
-class languageComponents extends sfComponents
+class LanguageComponents extends sfComponents
 {
   public function executeLanguage(sfWebRequest $request)
   {
