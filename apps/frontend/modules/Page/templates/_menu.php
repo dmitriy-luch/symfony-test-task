@@ -1,8 +1,8 @@
-<?php if(count($menuItems) > 0): ?>
+<?php if(count($pages) > 0): ?>
   <ul id="menu">
-    <?php foreach($menuItems as $menuItem): ?>
+    <?php foreach($pages as $page): ?>
       <li>
-        <a class="<?= ($menuItem['active'])? 'current' : '' ?>" href="<?= $menuItem['url'] ?>"><?= $menuItem['title'] ?></a>
+        <a href="<?= url_for('page', $page); ?>"><?= $page->getTitle() ?></a>
       </li>
     <?php endforeach;?>
   </ul>
