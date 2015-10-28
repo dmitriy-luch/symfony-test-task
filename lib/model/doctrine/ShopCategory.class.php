@@ -12,6 +12,19 @@
  */
 class ShopCategory extends BaseShopCategory
 {
+  /**
+   * List of products in the current category
+   *
+   * @var null|array
+   */
+  protected $products = null;
+
+  /**
+   * Generate thumbnail based on main image
+   *
+   * @param null|string $uploadedFileName Image name
+   * @throws Exception
+   */
   public function generateThumbnail($uploadedFileName = null)
   {
     if(!$uploadedFileName)
@@ -23,6 +36,11 @@ class ShopCategory extends BaseShopCategory
     $thumbnail->save($this->getUploadRootDir(true) . DIRECTORY_SEPARATOR . $uploadedFileName);
   }
 
+  /**
+   * Remove thumbnail related to current category
+   *
+   * @return bool True if removal is successful
+   */
   public function removeThumbnail()
   {
     $thumbnailFileName = $this->getAbsoluteImagePath(true);
@@ -34,6 +52,12 @@ class ShopCategory extends BaseShopCategory
     return false;
   }
 
+  /**
+   * Get absolute path of a category image (or thumbnail)
+   *
+   * @param bool|false $thumbnail
+   * @return string
+   */
   public function getAbsoluteImagePath($thumbnail = false)
   {
     $result = $this->getImage();
@@ -44,6 +68,12 @@ class ShopCategory extends BaseShopCategory
     return $result;
   }
 
+  /**
+   * Get web path of a category image (or thumbnail)
+   *
+   * @param bool|false $thumbnail
+   * @return string
+   */
   public function getWebImagePath($thumbnail = false)
   {
     $result = $this->getImage();
@@ -54,11 +84,23 @@ class ShopCategory extends BaseShopCategory
     return $result;
   }
 
+  /**
+   * Get upload directory for images (or thumbnails) starting from Root
+   *
+   * @param bool|false $thumbnail
+   * @return string
+   */
   public function getUploadRootDir($thumbnail = false)
   {
     return sfConfig::get('sf_web_dir') . $this->getUploadDir($thumbnail);
   }
 
+  /**
+   * Get upload directory for images (or thumbnails)
+   *
+   * @param bool|false $thumbnail
+   * @return mixed
+   */
   public function getUploadDir($thumbnail = false)
   {
     if($thumbnail)
@@ -78,16 +120,6 @@ class ShopCategory extends BaseShopCategory
     return $this->getShopGroups()->getPrimaryKeys();
   }
 
-  // Leaving commented since it might be useful in future
-//  public function getProductInternals()
-//  {
-//    $query = Doctrine::getTable('WhmcsProductInternal')
-//        ->createQuery('p')
-//        ->andWhereIn('gid', $this->getGroupIds());
-//    return $query->execute();
-//  }
-  // End of commented code
-
   /**
    * Cheapest price among all Category Group Products (and Domains)
    *
@@ -106,5 +138,47 @@ class ShopCategory extends BaseShopCategory
     $cheapest = reset($result);
     // TODO: Save value to cache for further usage
     return $cheapest;
+  }
+
+  /**
+   * Get list of products for current category.
+   * Load products first if none are loaded yet
+   *
+   * @return array
+   */
+  public function getProducts()
+  {
+    if(!$this->products)
+    {
+      $this->loadProducts();
+    }
+    return $this->products;
+  }
+
+  /**
+   * Load products(domains) from WHMCS tables
+   */
+  protected function loadProducts()
+  {
+    // Initialize products with an empty array
+    $this->products = [];
+    // Get all products from ProductInternal
+    $internalProducts = Doctrine::getTable('WhmcsProductInternal')->findAllByGroupIds($this->getGroupIds());
+    foreach($internalProducts as $internalProduct)
+    {
+      // Create new ShopProduct for each of internal products
+      $this->products[] = new ShopProduct($internalProduct);
+    }
+    // If current category includes domains
+    if ($this->getIncludeDomains())
+    {
+      // Get all domains from DomainTld
+      $internalDomains = Doctrine::getTable('WhmcsDomainTld')->findAllWithPrices();
+      foreach($internalDomains as $internalDomain)
+      {
+        // Create new ShopProduct for each of domains
+        $this->products[] = new ShopProduct($internalDomain);
+      }
+    }
   }
 }

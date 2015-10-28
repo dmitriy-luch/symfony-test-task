@@ -12,42 +12,49 @@
  */
 abstract class PluginWhmcsPrice extends BaseWhmcsPrice
 {
+  /**
+   * List of product types related to domains
+   *
+   * @return array
+   */
   public static function getDomainPriceTypes()
   {
     return [
-      'domainregister',
-      'domaintransfer',
-      'domainrenew'
+        self::getNewDomainPriceType(),
+        'domaintransfer',
+        'domainrenew'
     ];
   }
 
+  /**
+   * New domain product type
+   *
+   * @return string
+   */
+  public static function getNewDomainPriceType()
+  {
+    return 'domainregister';
+  }
+
+  /**
+   * List of product types related to products
+   *
+   * @return array
+   */
   public static function getProductTypes()
   {
     return [
-      'product'
+      self::getNewProductType()
     ];
   }
 
-  public function getProductItem()
+  /**
+   * New product type
+   *
+   * @return string
+   */
+  public static function getNewProductType()
   {
-    if(in_array($this->type, self::getDomainPriceTypes()))
-    {
-      return $this->getDomain();
-    }
-
-    if(in_array($this->type, self::getProductTypes()))
-    {
-      return $this->getProduct();
-    }
-  }
-
-  public function getDomain()
-  {
-    return Doctrine::getTable('PluginWhmcsDomainTld')->findBy('id', $this->getRelid());
-  }
-
-  public function getProduct()
-  {
-    // TODO: Get product from API
+    return 'product';
   }
 }

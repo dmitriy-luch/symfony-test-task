@@ -29,7 +29,13 @@ class FrontendShopCategoryActions extends sfActions
    */
   public function executeShow(sfWebRequest $request)
   {
+    // Current user currency to use in View
+    $this->currentCurrency = PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getUser()->getCurrency());
+
+    // Get current category from route
     $this->category = $this->getRoute()->getObject();
+    // Get all category products (and domains)
+    $this->products = $this->category->getProducts();
     // TODO: Refactoring required.
     $request->setAttribute('objectId', $this->category->getId());
     $request->setAttribute('objectClass', 'ShopCategory');

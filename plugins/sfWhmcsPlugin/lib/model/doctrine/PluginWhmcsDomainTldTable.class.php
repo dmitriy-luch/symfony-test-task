@@ -16,4 +16,22 @@ class PluginWhmcsDomainTldTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('PluginWhmcsDomainTld');
     }
+
+    /**
+     * Find all domains in format required by ShopProduct
+     *
+     * @return array
+     */
+    public function findAllWithPrices()
+    {
+        return $this->createQuery('d')
+            ->select('d.extension as name')
+            ->addSelect('"domain" as type')
+            ->addSelect('d.id as id')
+            ->addSelect('p.*')
+            ->leftJoin('d.Prices as p')
+            ->andWhere('p.type = ?', PluginWhmcsPrice::getNewDomainPriceType())
+            ->orderBy('d.order')
+            ->fetchArray();
+    }
 }
