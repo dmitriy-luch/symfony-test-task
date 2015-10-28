@@ -26,7 +26,9 @@
           <h2 class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></h2>
         <?php endif ?>
       </div>
-      <?php echo $sf_content ?>
+      <div class="view-content">
+        <?php echo $sf_content ?>
+      </div>
     </div>
     <div id="footer">
       <?php
