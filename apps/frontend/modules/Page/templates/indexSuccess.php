@@ -5,7 +5,7 @@
             <?php foreach($categories as $category): ?>
                 <li>
                     <?= $category->name ?>
-                    <?php if($category->getCheapestPrice($sf_user->getCurrencyId())): ?>
+                    <?php if($currentCurrency && $category->getCheapestPrice($sf_user->getCurrencyId())): ?>
                     <span>
                         <?= __('Price starts from')?> <?= $category->getCheapestPrice($sf_user->getCurrencyId()) ?> <?= $currentCurrency->suffix?>
                     </span>

@@ -3,7 +3,9 @@
 
 # default values
 all:
-  default_title: "Simple page"
+  default:
+    title: "Simple page"
+    currency: "USD"
   meta: "Simple page"
   name: "Shop"
   homepage:

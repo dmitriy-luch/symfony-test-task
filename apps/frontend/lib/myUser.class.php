@@ -27,7 +27,14 @@ class myUser extends sfBasicSecurityUser
    */
   public function getCurrencyId()
   {
-    return (int)PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getCurrency())->id;
+    $currency = PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getCurrency());
+    if(!$currency)
+    {
+      // No WHMCS currency found.
+      // TODO: Consider changing user currency at this point
+      return null;
+    }
+    return (int)$currency->id;
   }
 
   public function getHistoryCultrure($clearHistory = true)
