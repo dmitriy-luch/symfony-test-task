@@ -12,5 +12,6 @@ class PageTranslationForm extends BasePageTranslationForm
 {
   public function configure()
   {
+    $this->widgetSchema['content'] = new sfWidgetFormTextareaTinyMCE(['theme' => 'modern']);
   }
 }
