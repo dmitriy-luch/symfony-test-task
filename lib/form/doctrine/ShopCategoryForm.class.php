@@ -97,4 +97,34 @@ class ShopCategoryForm extends BaseShopCategoryForm
       Doctrine::getTable('ShopCategory')->removeSpecials();
     }
   }
+
+  /**
+   * Embeds i18n objects into the current form.
+   * Overrode method to prevent Lang field from removal on new forms
+   *
+   * @param array $cultures An array of cultures
+   * @param string $decorator A HTML decorator for the embedded form
+   * @throws sfException
+   */
+  public function embedI18n($cultures, $decorator = null)
+  {
+    if (!$this->isI18n())
+    {
+      throw new sfException(sprintf('The model "%s" is not internationalized.', $this->getModelName()));
+    }
+
+    $class = $this->getI18nFormClass();
+    foreach ($cultures as $culture)
+    {
+      $i18nObject = $this->getObject()->Translation[$culture];
+      $i18n = new $class($i18nObject);
+
+      if (false === $i18nObject->exists())
+      {
+        unset($i18n[$this->getI18nModelPrimaryKeyName()]);
+      }
+
+      $this->embedForm($culture, $i18n, $decorator);
+    }
+  }
 }

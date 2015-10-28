@@ -12,5 +12,22 @@ class ShopCategoryTranslationForm extends BaseShopCategoryTranslationForm
 {
   public function configure()
   {
+    if( ! $this->isNew() )
+    {
+      $this->widgetSchema['id']    = new sfWidgetFormInputHidden();
+      $this->validatorSchema['id'] = new sfValidatorNumber(array(
+          'required' => true,
+          'min'      => 1
+      ));
+    }
+    $this->mergePostValidator(new sfValidatorDoctrineUniqueI18n(
+                [
+                    'model' => 'ShopCategory',
+                    'column' => ['name', 'lang'],
+                ],
+                [
+                    'invalid' => 'This Name already exists for current language.'
+                ])
+    );
   }
 }
