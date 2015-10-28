@@ -14,5 +14,8 @@ class LanguageComponents extends sfComponents
         ]
     );
     $this->form->setDefault('currentPage', $this->getVar('currentPage'));
+    $this->form->setDefault('objectId', $this->getVar('objectId'));
+    $this->form->setDefault('objectClass', $this->getVar('objectClass'));
+    $this->form->setDefault('objectRoute', $this->getVar('objectRoute'));
   }
 }

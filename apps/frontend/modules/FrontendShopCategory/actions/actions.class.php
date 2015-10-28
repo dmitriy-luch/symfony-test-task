@@ -30,7 +30,9 @@ class FrontendShopCategoryActions extends sfActions
   public function executeShow(sfWebRequest $request)
   {
     $this->category = $this->getRoute()->getObject();
+    // TODO: Refactoring required.
     $request->setAttribute('objectId', $this->category->getId());
     $request->setAttribute('objectClass', 'ShopCategory');
+    $request->setAttribute('objectRoute', 'category');
   }
 }

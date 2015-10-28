@@ -20,7 +20,6 @@ abstract class BaseShopCategoryFormFilter extends BaseFormFilterDoctrine
       'image'                => new sfWidgetFormFilterInput(),
       'created_at'           => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
       'updated_at'           => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
-      'slug'                 => new sfWidgetFormFilterInput(),
       'shop_groups_list'     => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup')),
     ));
 
@@ -32,7 +31,6 @@ abstract class BaseShopCategoryFormFilter extends BaseFormFilterDoctrine
       'image'                => new sfValidatorPass(array('required' => false)),
       'created_at'           => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'updated_at'           => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
-      'slug'                 => new sfValidatorPass(array('required' => false)),
       'shop_groups_list'     => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup', 'required' => false)),
     ));
 
@@ -79,7 +77,6 @@ abstract class BaseShopCategoryFormFilter extends BaseFormFilterDoctrine
       'image'                => 'Text',
       'created_at'           => 'Date',
       'updated_at'           => 'Date',
-      'slug'                 => 'Text',
       'shop_groups_list'     => 'ManyKey',
     );
   }

@@ -91,9 +91,7 @@ abstract class BaseShopCategory extends sfDoctrineRecord
               0 => 'name',
              ),
              ));
-        $sluggable0 = new Doctrine_Template_Sluggable();
         $this->actAs($timestampable0);
         $this->actAs($i18n0);
-        $this->actAs($sluggable0);
     }
 }

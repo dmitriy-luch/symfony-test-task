@@ -37,6 +37,7 @@
             'currentPage' => $sf_request->getUri(),
             'objectId' => $sf_request->getAttribute('objectId'),
             'objectClass' => $sf_request->getAttribute('objectClass'),
+            'objectRoute' => $sf_request->getAttribute('objectRoute'),
           ]
         )
       ?>

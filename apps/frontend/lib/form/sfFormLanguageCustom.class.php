@@ -10,6 +10,15 @@ class sfFormLanguageCustom extends sfFormLanguage
     $this->setWidget('currentPage', new sfWidgetFormInputHidden());
     $this->setValidator('currentPage', new sfValidatorUrl());
 
+    $this->setWidget('objectId', new sfWidgetFormInputHidden());
+    $this->setValidator('objectId', new sfValidatorPass());
+
+    $this->setWidget('objectClass', new sfWidgetFormInputHidden());
+    $this->setValidator('objectClass', new sfValidatorPass());
+
+    $this->setWidget('objectRoute', new sfWidgetFormInputHidden());
+    $this->setValidator('objectRoute', new sfValidatorPass());
+
     // Required to store user's currency
     $currentCurrency = $this->user->getCurrency();
 

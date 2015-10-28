@@ -40,6 +40,19 @@ class LanguageActions extends sfActions
       return $this->redirect($redirect);
     }
 
+    $id = $request->getParameter('objectId');
+    $class = $request->getParameter('objectClass');
+    $route = $request->getParameter('objectRoute');
+    if($id && $class && $route)
+    {
+      $object = Doctrine::getTable($class)->findOneById($id);
+      if($object)
+      {
+        $url = $this->generateUrl($route, $object, false);
+        return $this->redirect($url);
+      }
+    }
+
     // Get new user culture
     $newCulture = $this->getUser()->getCulture();
 

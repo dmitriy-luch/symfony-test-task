@@ -63,4 +63,23 @@ class ShopCategoryTable extends Doctrine_Table
         // TODO: Save result to cache
         return $query->execute();
     }
+
+    /**
+     * Get Category by it's Name and current Culture
+     *
+     * @param $params array Parameters for query
+     * - sf_culture Culture from the URL
+     * - name Category Name from the URL
+     * @return mixed
+     */
+    public function findOneByNameAndCulture($params)
+    {
+        $culture = (isset($params['sf_culture']))? $params['sf_culture'] : null;
+        $name = (isset($params['name']))? $params['name'] : null;
+        $q = $this->createQuery('c')
+            ->leftJoin('c.Translation t')
+            ->andWhere('t.lang = ?', $culture)
+            ->andWhere('t.name = ?', $name);
+        return $q->fetchOne();
+    }
 }

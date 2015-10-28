@@ -11,9 +11,9 @@ change_language:
   param: { module: Language, action: changeLanguage }
 
 category:
-  url:   /:sf_culture/:slug
+  url:   /:sf_culture/category/:name
   class:   sfDoctrineRoute
-  options: { model: ShopCategory, type: object }
+  options: { model: ShopCategory, type: object, method: findOneByNameAndCulture }
   param: { module: FrontendShopCategory, action: show }
 
 page:
