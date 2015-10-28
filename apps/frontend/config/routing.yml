@@ -4,11 +4,17 @@
 # default rules
 homepage:
   url:   /
-  param: { module: Page, action: index }
+  param: { module: FrontendShopCategory, action: index }
 
 change_language:
   url:   /change_language
   param: { module: Language, action: changeLanguage }
+
+category:
+  url:   /:sf_culture/:slug
+  class:   sfDoctrineRoute
+  options: { model: ShopCategory, type: object }
+  param: { module: FrontendShopCategory, action: show }
 
 page:
   url:   /:sf_culture/:url

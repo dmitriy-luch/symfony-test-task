@@ -19,12 +19,4 @@ class PageActions extends sfActions
     $response->addMeta('description', $this->page->getMetaDescription());
     $response->addMeta('keywords', $this->page->getMetaDescription());
   }
-
-  public function executeIndex(sfWebRequest $request)
-  {
-    // Current user currency to use in View
-    $this->currentCurrency = PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getUser()->getCurrency());
-    // All frontend categories
-    $this->categories = Doctrine::getTable('ShopCategory')->findAllFrontend(sfConfig::get('app_homepage_categories_count', 3));
-  }
 }

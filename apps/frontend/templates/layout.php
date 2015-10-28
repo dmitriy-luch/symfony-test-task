@@ -29,7 +29,17 @@
       <?php echo $sf_content ?>
     </div>
     <div id="footer">
-      <?php include_component('Language', 'language', ['currentPage' => $sf_request->getUri()]) ?>
+      <?php
+        include_component(
+          'Language',
+          'language',
+          [
+            'currentPage' => $sf_request->getUri(),
+            'objectId' => $sf_request->getAttribute('objectId'),
+            'objectClass' => $sf_request->getAttribute('objectClass'),
+          ]
+        )
+      ?>
       <?php
       //Adding some text in footer to test i18n
       echo __('Some custom footer text');

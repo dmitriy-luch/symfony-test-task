@@ -23,6 +23,7 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
       'image'                => new sfWidgetFormInputText(),
       'created_at'           => new sfWidgetFormDateTime(),
       'updated_at'           => new sfWidgetFormDateTime(),
+      'slug'                 => new sfWidgetFormInputText(),
       'shop_groups_list'     => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup')),
     ));
 
@@ -35,8 +36,13 @@ abstract class BaseShopCategoryForm extends BaseFormDoctrine
       'image'                => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'created_at'           => new sfValidatorDateTime(),
       'updated_at'           => new sfValidatorDateTime(),
+      'slug'                 => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'shop_groups_list'     => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'ShopGroup', 'required' => false)),
     ));
+
+    $this->validatorSchema->setPostValidator(
+      new sfValidatorDoctrineUnique(array('model' => 'ShopCategory', 'column' => array('slug')))
+    );
 
     $this->widgetSchema->setNameFormat('shop_category[%s]');
 

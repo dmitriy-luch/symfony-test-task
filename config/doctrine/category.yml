@@ -3,6 +3,7 @@ ShopCategory:
     Timestampable: ~
     I18n:
       fields: [ name ]
+    Sluggable: ~
   columns:
     name: { type: string(255), notnull: true }
     is_shown_on_frontend: { type: boolean, notnull: true, default: false }
