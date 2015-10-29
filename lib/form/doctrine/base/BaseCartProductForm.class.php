@@ -16,6 +16,7 @@ abstract class BaseCartProductForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'          => new sfWidgetFormInputHidden(),
+      'cart_id'     => new sfWidgetFormInputText(),
       'category_id' => new sfWidgetFormInputText(),
       'whmcs_pid'   => new sfWidgetFormInputText(),
       'type'        => new sfWidgetFormTextarea(),
@@ -25,6 +26,7 @@ abstract class BaseCartProductForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'          => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'cart_id'     => new sfValidatorInteger(),
       'category_id' => new sfValidatorInteger(),
       'whmcs_pid'   => new sfValidatorInteger(),
       'type'        => new sfValidatorString(array('required' => false)),

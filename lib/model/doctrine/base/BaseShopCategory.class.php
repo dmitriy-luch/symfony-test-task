@@ -84,7 +84,7 @@ abstract class BaseShopCategory extends sfDoctrineRecord
              'foreign' => 'whmcs_gid'));
 
         $this->hasMany('CartProduct', array(
-             'local' => 'id',
+             'local' => 'category_id',
              'foreign' => 'id'));
 
         $this->hasMany('CategoryRelations', array(

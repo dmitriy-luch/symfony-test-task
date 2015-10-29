@@ -13,6 +13,7 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
+      'cart_id'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'category_id' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'whmcs_pid'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'type'        => new sfWidgetFormFilterInput(),
@@ -21,6 +22,7 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
+      'cart_id'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'category_id' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'whmcs_pid'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'type'        => new sfValidatorPass(array('required' => false)),
@@ -46,6 +48,7 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id'          => 'Number',
+      'cart_id'     => 'Number',
       'category_id' => 'Number',
       'whmcs_pid'   => 'Number',
       'type'        => 'Text',
