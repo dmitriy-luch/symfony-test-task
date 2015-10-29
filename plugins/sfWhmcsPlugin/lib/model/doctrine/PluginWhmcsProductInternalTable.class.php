@@ -41,15 +41,27 @@ class PluginWhmcsProductInternalTable extends Doctrine_Table
         {
             return [];
         }
-        return $this->createQuery('pr')
-            ->select('pr.name as name')
-            ->addSelect('pr.description as description')
-            ->addSelect('"product" as type')
-            ->addSelect('pr.id as id')
-            ->addSelect('p.*')
-            ->leftJoin('pr.Prices as p')
-            ->andWhere('p.type = ?', PluginWhmcsPrice::getNewProductType())
+        return $this->findWithPricesQuery()
             ->andWhereIn('gid', $groupIds)
             ->fetchArray();
+    }
+
+    public function findOneByIdWithPrices($id)
+    {
+      return $this->findWithPricesQuery()
+          ->andWhere('id = ?', $id)
+          ->fetchOne([], Doctrine_Core::HYDRATE_ARRAY);
+    }
+
+    protected function findWithPricesQuery()
+    {
+      return $this->createQuery('pr')
+          ->select('pr.name as name')
+          ->addSelect('pr.description as description')
+          ->addSelect('"product" as type')
+          ->addSelect('pr.id as id')
+          ->addSelect('p.*')
+          ->leftJoin('pr.Prices as p')
+          ->andWhere('p.type = ?', PluginWhmcsPrice::getNewProductType());
     }
 }

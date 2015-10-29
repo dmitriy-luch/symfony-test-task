@@ -24,6 +24,18 @@ class PluginWhmcsDomainTldTable extends Doctrine_Table
      */
     public function findAllWithPrices()
     {
+        return $this->findWithPricesQuery()->fetchArray();
+    }
+
+    public function findOneByIdWithPrices($id)
+    {
+        return $this->findWithPricesQuery()
+            ->andWhere('id = ?', $id)
+            ->fetchOne([], Doctrine_Core::HYDRATE_ARRAY);
+    }
+
+    protected function findWithPricesQuery()
+    {
         return $this->createQuery('d')
             ->select('d.extension as name')
             ->addSelect('"domain" as type')
@@ -31,7 +43,6 @@ class PluginWhmcsDomainTldTable extends Doctrine_Table
             ->addSelect('p.*')
             ->leftJoin('d.Prices as p')
             ->andWhere('p.type = ?', PluginWhmcsPrice::getNewDomainPriceType())
-            ->orderBy('d.order')
-            ->fetchArray();
+            ->orderBy('d.order');
     }
 }

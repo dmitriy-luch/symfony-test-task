@@ -68,6 +68,19 @@ class PluginWhmcsCurrencies implements Iterator
     return (isset($this->currencies[$code]))? $this->currencies[$code] : null;
   }
 
+  public function findById($id)
+  {
+    foreach ($this->currencies as $currency)
+    {
+      if($currency->id == $id)
+      {
+        return $currency;
+      }
+    }
+
+    return null;
+  }
+
 
   // Iterator interface methods
   public function rewind()

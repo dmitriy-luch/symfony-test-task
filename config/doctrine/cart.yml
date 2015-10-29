@@ -1,0 +1,42 @@
+ShopCart:
+  actAs:
+    Timestampable: ~
+  columns:
+    token: { type: string, notnull: true }
+  relations:
+    CartProducts:
+      class: CartProduct
+      foreignAlias: ShopProductCart
+      refClass: ShopCartProductRelations
+      local: cart_id
+      foreign: product_id
+      type: many
+      foreignType: one
+
+CartProduct:
+  columns:
+    category_id: { type: integer, notnull: true }
+    whmcs_pid: { type: integer, notnull: true }
+    type: { type: string }
+    period: { type: string }
+    params: { type: string }
+  relations:
+    ShopCategory:
+      local: id
+      foreign: id
+      type: one
+      foreignType: many
+
+ShopCartProductRelations:
+  columns:
+    cart_id: { type: integer, notnull: true }
+    product_id: { type: integer, notnull: true }
+  relations:
+    ShopCart:
+      local: cart_id
+      foreign: id
+      foreignAlias: ShopCartProductRelations
+    CartProduct:
+      local: product_id
+      foreign: id
+      foreignAlias: ShopCartProductRelations

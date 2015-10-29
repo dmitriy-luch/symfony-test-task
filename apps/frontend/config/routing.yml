@@ -10,6 +10,17 @@ change_language:
   url:   /change_language
   param: { module: Language, action: changeLanguage }
 
+cart:
+  url:   /cart
+  param: { module: ShopCart, action: index }
+
+add_to_cart:
+  url:   /addToCart
+  class: sfRequestRoute
+  param: { module: ShopCart, action: addToCart }
+  requirements:
+    sf_method: [post]
+
 category:
   url:   /:sf_culture/category/:name
   class:   sfDoctrineRoute

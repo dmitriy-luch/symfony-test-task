@@ -36,6 +36,25 @@ class FrontendShopCategoryActions extends sfActions
     $this->category = $this->getRoute()->getObject();
     // Get all category products (and domains)
     $this->products = $this->category->getProducts();
+
+    $this->productForms = [];
+    foreach($this->products as $product)
+    {
+      $cartProduct = new CartProduct();
+      $cartProduct->fromArray([
+        'category_id' => $this->category->getId(),
+        'whmcs_pid' => $product->id,
+        'type' => $product->type,
+      ]);
+      $form = new CartProductForm(
+        $cartProduct,
+        [
+          'currency' => $this->getUser()->getCurrencyId(),
+        ]
+      );
+      $product->form = $form;
+    }
+
     // TODO: Refactoring required.
     $request->setAttribute('objectId', $this->category->getId());
     $request->setAttribute('objectClass', 'ShopCategory');

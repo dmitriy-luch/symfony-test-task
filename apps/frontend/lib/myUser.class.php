@@ -10,6 +10,11 @@ class myUser extends sfBasicSecurityUser
     $dispatcher->connect('user.pre_change_culture', array($this, 'listenToPreChangeCultureEvent'));
   }
 
+  /**
+   * Get user currency from session or use default from config
+   *
+   * @return string|null Currency Code
+   */
   public function getCurrency()
   {
     $currentCurrency = sfConfig::get('app_default_currency', null);
@@ -51,6 +56,11 @@ class myUser extends sfBasicSecurityUser
     return $historyCulture;
   }
 
+  /**
+   * Set user currency in session
+   *
+   * @param $currency string
+   */
   public function setCurrency($currency)
   {
     $this->setAttribute('currency', $currency);
@@ -67,5 +77,47 @@ class myUser extends sfBasicSecurityUser
     {
       $this->setAttribute('historyCulture', $parameters['culture']);
     }
+  }
+
+  public function getCart($request = null)
+  {
+    if(!$this->hasAttribute('cart') && $request)
+    {
+      $this->loadCartFromCookie($request);
+    }
+    if(!$this->hasAttribute('cart'))
+    {
+      return null;
+    }
+
+    $cartToken = $this->getAttribute('cart');
+    return $cartToken;
+//    return Doctrine::getTable('ShopCart')->findOneByToken($cartToken);
+  }
+
+  public function createCart($response)
+  {
+    // Create new cart
+    $cart = new ShopCart();
+    $cart->save();
+//    $cartToken = $cart->getToken();
+    $cartToken = $cart->getId();
+    // Save to session
+    $this->setAttribute('cart', $cartToken);
+    // Save to cookie
+    $this->setCartToCookie($response, $cartToken);
+    // Return cart token
+    return $cartToken;
+  }
+
+  protected function loadCartFromCookie($request)
+  {
+    $cart = $request->getCookie('cart');
+    $this->setAttribute('cart', base64_decode($cart));
+  }
+
+  protected function setCartToCookie($response, $cart)
+  {
+    $response->setCookie('cart', base64_encode($cart));
   }
 }

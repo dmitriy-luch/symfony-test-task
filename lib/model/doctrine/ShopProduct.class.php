@@ -29,6 +29,8 @@ class ShopProduct
    */
   protected $prices;
 
+  protected $currency;
+
   /**
    * List of Billing periods and WHMCS fields for each of them
    *
@@ -113,6 +115,7 @@ class ShopProduct
   {
     // Initialize result with an empty array
     $result = [];
+    $currency = PluginWhmcsConnection::initConnection()->getCurrencies()->findById($prices['currency']);
     // Loop through billing periods
     foreach($this->billingPeriods() as $periodName => $periodDetails)
     {
@@ -122,16 +125,19 @@ class ShopProduct
         continue;
       }
       // Initialize current billing period with base price and type
-      $result[$periodName] = [
+      $params = [
+        'billingPeriod' => $periodName,
         'base' => $prices[$periodDetails['base']],
         'type' => $periodDetails['base'],
+        'currencySuffix' => $currency->suffix,
       ];
       // In case setup option is provided and is not set to -1 (WHMCS Disable option)
       if(isset($prices[$periodDetails['setup']]) && $prices[$periodDetails['setup']] != self::WHMCS_PRODUCT_DISABLED_PRICE)
       {
         // Add setup value to the resulting array
-        $result[$periodName]['setup'] = $prices[$periodDetails['setup']];
+        $params['setup'] = $prices[$periodDetails['setup']];
       }
+      $result[$periodDetails['base']] = new ShopProductPrice($params);
     }
     return $result;
   }
@@ -146,6 +152,10 @@ class ShopProduct
   {
     // Initialize result with an empty array
     $result = [];
+    $currency = PluginWhmcsConnection::initConnection()->getCurrencies()->findById($prices['currency']);
+    if(!$currency){
+      // TODO: Consider what to do next. Throw an exception probably
+    }
     // Get all WHMCS Prices table fields that contain prices
     $priceFields = Doctrine::getTable('WhmcsPrice')->getPriceFields();
     // Loop through each price field
@@ -159,10 +169,14 @@ class ShopProduct
       // Get current billing period year
       $year = $index+1;
       // Initialize current billing period with base price and type
-      $result["$year year"] = [
+      $result[$priceField] = new ShopProductPrice(
+        [
+          'billingPeriod' => "$year year",
           'base' => $prices[$priceField],
           'type' => $priceField,
-      ];
+          'currencySuffix' => $currency->suffix,
+        ]
+      );
     }
     return $result;
   }
@@ -180,5 +194,19 @@ class ShopProduct
       return [];
     }
     return $this->prices[$currency];
+  }
+
+  public static function findOneByTypeAndId($type, $id)
+  {
+    $product = null;
+    switch($type)
+    {
+      case 'domain':
+        return new self(Doctrine::getTable('WhmcsDomainTld')->findOneByIdWithPrices($id, Doctrine_Core::HYDRATE_ARRAY));
+        break;
+      case 'product':
+        return new self(Doctrine::getTable('WhmcsProductInternal')->findOneByIdWithPrices($id, Doctrine_Core::HYDRATE_ARRAY));
+        break;
+    }
   }
 }
