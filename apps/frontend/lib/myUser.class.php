@@ -91,8 +91,7 @@ class myUser extends sfBasicSecurityUser
     }
 
     $cartToken = $this->getAttribute('cart');
-    return $cartToken;
-//    return Doctrine::getTable('ShopCart')->findOneByToken($cartToken);
+    return Doctrine::getTable('ShopCart')->findOneById($cartToken);
   }
 
   public function createCart($response)
@@ -100,7 +99,6 @@ class myUser extends sfBasicSecurityUser
     // Create new cart
     $cart = new ShopCart();
     $cart->save();
-//    $cartToken = $cart->getToken();
     $cartToken = $cart->getId();
     // Save to session
     $this->setAttribute('cart', $cartToken);
