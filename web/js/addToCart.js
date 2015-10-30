@@ -7,7 +7,6 @@ $(document).ready(function()
             context: this,
             data: $(this).serialize(),
         }).success(function( data ) {
-            console.log(data);
             var $dataElement = $('<div>').append($(data));
             var $addToCartForm = $dataElement.find('.add-to-cart-form');
             var $cartComponent = $dataElement.find('#cart');
