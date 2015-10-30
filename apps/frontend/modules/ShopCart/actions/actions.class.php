@@ -57,7 +57,7 @@ class ShopCartActions extends sfActions
       $this->productForm->save();
       if($request->isXmlHttpRequest()){
         // TODO: Reload Cart component
-        return $this->renderText('test');
+        return $this->renderComponent('ShopCart', 'cart');
       }
       // Redirect to cart with newly added product
       return $this->redirect('cart');

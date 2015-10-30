@@ -16,7 +16,7 @@ default:
     - main.css
 
   javascripts:
-    - https://code.jquery.com/jquery-1.6.4.min.js
+    - https://code.jquery.com/jquery-2.1.4.min.js
     - currency.js
 
   has_layout:     true
