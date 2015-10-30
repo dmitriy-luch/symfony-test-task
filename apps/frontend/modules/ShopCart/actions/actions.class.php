@@ -44,7 +44,7 @@ class ShopCartActions extends sfActions
         return $this->renderComponent('ShopCart', 'cart');
       }
       // Redirect to cart with newly added product
-      return $this->redirect('cart');
+      $this->redirect('cart');
     }
   }
 

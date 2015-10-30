@@ -37,7 +37,7 @@ class LanguageActions extends sfActions
       }
 
       // Redirecting
-      return $this->redirect($redirect);
+      $this->redirect($redirect);
     }
 
     $id = $request->getParameter('objectId');
@@ -49,13 +49,13 @@ class LanguageActions extends sfActions
       if($object)
       {
         $url = $this->generateUrl($route, $object, false);
-        return $this->redirect($url);
+        $this->redirect($url);
       }
     }
 
     // Get new user culture
     $newCulture = $this->getUser()->getCulture();
 
-    return $this->redirect(str_replace('/'.$oldCulture.'/', '/'.$newCulture.'/', $request->getParameter("currentPage")));
+    $this->redirect(str_replace('/'.$oldCulture.'/', '/'.$newCulture.'/', $request->getParameter("currentPage")));
   }
 }
