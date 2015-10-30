@@ -51,12 +51,7 @@ class ShopCartActions extends sfActions
   public function executeUpdateInCart(sfWebRequest $request)
   {
     $params = $this->getFormParams();
-    $action = null;
-    if(isset($params['action']))
-    {
-      $action = $params['action'];
-      unset($params['action']);
-    }
+    $action = (isset($params['action']))? $params['action'] : null;
 
     switch($action){
       case 'Update':
@@ -76,10 +71,7 @@ class ShopCartActions extends sfActions
 
   protected function getFormParams($formClass = "CartProductForm")
   {
-    // Temporary hack
-    // TODO: Refactoring required. Form created twice.
-    $productForm = new $formClass();
-    return $this->getRequest()->getParameter($productForm->getName());
+    return $this->getRequest()->getParameter($formClass::FORM_NAME);
   }
 
   protected function getCartProduct($params, $itemClass = "CartProduct")

@@ -12,6 +12,8 @@ class CartProductForm extends BaseCartProductForm
 {
   protected $user;
 
+  const FORM_NAME = 'cart_product';
+
   public function __construct($object = null, $options = array(), $CSRFSecret = null)
   {
     if(!isset($options['user']))
@@ -55,6 +57,7 @@ class CartProductForm extends BaseCartProductForm
         'type'        => new sfValidatorString(array('required' => true)),
         'period'      => new sfValidatorChoice(['required' => true, 'choices' => array_keys($billingPeriods)]),
         'params'      => new sfValidatorString(array('required' => false)),
+        'action'      => new sfValidatorChoice(['required' => true, 'choices' => ['Update', 'Delete', 'Add']]),
     ));
 
     if($type == 'domain')
@@ -68,8 +71,7 @@ class CartProductForm extends BaseCartProductForm
       );
     }
 
-//    $this->widgetSchema->setNameFormat('cart_product' . $whmcsId . $type . '[%s]');
-    $this->widgetSchema->setNameFormat('cart_product[%s]');
+    $this->widgetSchema->setNameFormat(self::FORM_NAME . '[%s]');
   }
 
   public function updateCartIdColumn($value)
