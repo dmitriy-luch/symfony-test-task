@@ -10,6 +10,7 @@ class ShopProductPrice
   protected $type;
   protected $setup;
   protected $currencySuffix;
+  protected $total;
 
   public function __construct($params)
   {
@@ -27,14 +28,17 @@ class ShopProductPrice
     $this->base = $params['base'];
     $this->type = $params['type'];
     $this->setup = (isset($params['setup']))? $params['setup'] : null;
+    $this->total = $this->base + $this->setup;
     $this->currencySuffix = $params['currencySuffix'];
   }
 
   public function __toString()
   {
-    $stringRepresentation = sprintf('%1$s - %2$d', $this->billingPeriod, $this->base);
-    $stringRepresentation .= ($this->setup)? sprintf(' (+%1$d)', $this->setup) : '';
-    $stringRepresentation .= sprintf(' %1$s', $this->currencySuffix);
+    $stringRepresentation = sprintf('%1$s ~ %2$d %3$s', $this->billingPeriod, $this->total, $this->currencySuffix);
+    if($this->setup)
+    {
+      $stringRepresentation .= sprintf(' (%1$d %2$s Base + %3$d %2$s Setup)', $this->base, $this->currencySuffix, $this->setup);
+    }
     return $stringRepresentation;
   }
 }
