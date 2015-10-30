@@ -32,19 +32,16 @@ class ShopCartActions extends sfActions
     $this->productForm = new CartProductForm(
         $cartProduct,
         [
-        'currency' => $this->getUser()->getCurrencyId(),
+          'currency' => $this->getUser()->getCurrencyId(),
+          'request' => $request,
+          'response' => $this->getResponse(),
+          'user' => $this->getUser(),
         ]
     );
     $this->productForm->bind($params);
     if($this->productForm->isValid())
     {
-      // TODO: Move to AddProduct method
-      // Get current cart or create new
-      $cartToken = $this->getUser()->getCart($request);
-      if(!$cartToken){
-        $cartToken = $this->getUser()->createCart($this->getResponse());
-      }
-      // TODO: Add to cart
+      $this->productForm->save();
       if($request->isXmlHttpRequest()){
         // TODO: Reload Cart component
         return $this->renderText('test');

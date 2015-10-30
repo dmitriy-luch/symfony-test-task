@@ -12,7 +12,7 @@
  * @property boolean $special
  * @property string $image
  * @property Doctrine_Collection $ShopGroups
- * @property Doctrine_Collection $CartProduct
+ * @property Doctrine_Collection $CartProducts
  * @property Doctrine_Collection $CategoryRelations
  * 
  * @method string              getName()                 Returns the current record's "name" value
@@ -22,7 +22,7 @@
  * @method boolean             getSpecial()              Returns the current record's "special" value
  * @method string              getImage()                Returns the current record's "image" value
  * @method Doctrine_Collection getShopGroups()           Returns the current record's "ShopGroups" collection
- * @method Doctrine_Collection getCartProduct()          Returns the current record's "CartProduct" collection
+ * @method Doctrine_Collection getCartProducts()         Returns the current record's "CartProducts" collection
  * @method Doctrine_Collection getCategoryRelations()    Returns the current record's "CategoryRelations" collection
  * @method ShopCategory        setName()                 Sets the current record's "name" value
  * @method ShopCategory        setIsShownOnFrontend()    Sets the current record's "is_shown_on_frontend" value
@@ -31,7 +31,7 @@
  * @method ShopCategory        setSpecial()              Sets the current record's "special" value
  * @method ShopCategory        setImage()                Sets the current record's "image" value
  * @method ShopCategory        setShopGroups()           Sets the current record's "ShopGroups" collection
- * @method ShopCategory        setCartProduct()          Sets the current record's "CartProduct" collection
+ * @method ShopCategory        setCartProducts()         Sets the current record's "CartProducts" collection
  * @method ShopCategory        setCategoryRelations()    Sets the current record's "CategoryRelations" collection
  * 
  * @package    shop
@@ -83,9 +83,9 @@ abstract class BaseShopCategory extends sfDoctrineRecord
              'local' => 'category_id',
              'foreign' => 'whmcs_gid'));
 
-        $this->hasMany('CartProduct', array(
-             'local' => 'category_id',
-             'foreign' => 'id'));
+        $this->hasMany('CartProduct as CartProducts', array(
+             'local' => 'id',
+             'foreign' => 'category_id'));
 
         $this->hasMany('CategoryRelations', array(
              'local' => 'id',

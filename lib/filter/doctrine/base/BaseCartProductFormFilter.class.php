@@ -13,8 +13,8 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'cart_id'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'category_id' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'cart_id'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ShopCart'), 'add_empty' => true)),
+      'category_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ShopCategory'), 'add_empty' => true)),
       'whmcs_pid'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'type'        => new sfWidgetFormFilterInput(),
       'period'      => new sfWidgetFormFilterInput(),
@@ -22,8 +22,8 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
-      'cart_id'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'category_id' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'cart_id'     => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('ShopCart'), 'column' => 'id')),
+      'category_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('ShopCategory'), 'column' => 'id')),
       'whmcs_pid'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'type'        => new sfValidatorPass(array('required' => false)),
       'period'      => new sfValidatorPass(array('required' => false)),
@@ -48,8 +48,8 @@ abstract class BaseCartProductFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id'          => 'Number',
-      'cart_id'     => 'Number',
-      'category_id' => 'Number',
+      'cart_id'     => 'ForeignKey',
+      'category_id' => 'ForeignKey',
       'whmcs_pid'   => 'Number',
       'type'        => 'Text',
       'period'      => 'Text',

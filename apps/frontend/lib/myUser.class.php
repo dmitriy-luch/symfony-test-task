@@ -99,13 +99,27 @@ class myUser extends sfBasicSecurityUser
     // Create new cart
     $cart = new ShopCart();
     $cart->save();
-    $cartToken = $cart->getId();
+    $cartId = $cart->getId();
     // Save to session
-    $this->setAttribute('cart', $cartToken);
+    $this->setAttribute('cart', $cartId);
     // Save to cookie
-    $this->setCartToCookie($response, $cartToken);
+    $this->setCartToCookie($response, $cartId);
     // Return cart token
-    return $cartToken;
+    return $cart;
+  }
+
+  public function getCartOrCreate($params)
+  {
+    $cart = false;
+    if(isset($params['request']))
+    {
+      $cart = $this->getCart($params['request']);
+    }
+    if(!$cart && isset($params['response']))
+    {
+      $cart = $this->createCart($params['response']);
+    }
+    return $cart;
   }
 
   protected function loadCartFromCookie($request)
@@ -117,5 +131,12 @@ class myUser extends sfBasicSecurityUser
   protected function setCartToCookie($response, $cart)
   {
     $response->setCookie('cart', base64_encode($cart));
+  }
+
+  public function getCurrencyObject()
+  {
+    return PluginWhmcsConnection::initConnection()
+        ->getCurrencies()
+        ->findByCode($this->getCurrency());
   }
 }

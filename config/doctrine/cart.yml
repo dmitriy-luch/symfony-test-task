@@ -12,12 +12,14 @@ CartProduct:
     params: { type: string }
   relations:
     ShopCategory:
-      local: id
-      foreign: category_id
+      local: category_id
+      foreign: id
+      foreignAlias: CartProducts
       type: one
       foreignType: many
     ShopCart:
-      local: id
-      foreign: cart_id
+      local: cart_id
+      foreign: id
+      foreignAlias: CartProducts
       type: one
       foreignType: many

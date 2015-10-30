@@ -68,11 +68,11 @@ abstract class BaseCartProduct extends sfDoctrineRecord
     {
         parent::setUp();
         $this->hasOne('ShopCategory', array(
-             'local' => 'id',
-             'foreign' => 'category_id'));
+             'local' => 'category_id',
+             'foreign' => 'id'));
 
         $this->hasOne('ShopCart', array(
-             'local' => 'id',
-             'foreign' => 'cart_id'));
+             'local' => 'cart_id',
+             'foreign' => 'id'));
     }
 }
