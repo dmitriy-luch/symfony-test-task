@@ -21,6 +21,13 @@ add_to_cart:
   requirements:
     sf_method: [post]
 
+update_in_cart:
+  url:   /updateInCart
+  class: sfRequestRoute
+  param: { module: ShopCart, action: updateInCart }
+  requirements:
+    sf_method: [post]
+
 category:
   url:   /:sf_culture/category/:name
   class:   sfDoctrineRoute

@@ -35,26 +35,10 @@ class ShopCartActions extends sfActions
 
   public function executeAddToCart(sfWebRequest $request)
   {
-    // Temporary hack
-    // TODO: Refactoring required
-    $this->productForm = new CartProductForm();
-    $params = $request->getParameter($this->productForm->getName());
+    $params = $this->getFormParams();
 
-    $cartProduct = new CartProduct();
-    $cartProduct->fromArray($params);
-    $this->productForm = new CartProductForm(
-        $cartProduct,
-        [
-          'currency' => $this->getUser()->getCurrencyId(),
-          'request' => $request,
-          'response' => $this->getResponse(),
-          'user' => $this->getUser(),
-        ]
-    );
-    $this->productForm->bind($params);
-    if($this->productForm->isValid())
+    if($this->saveShopProduct($params))
     {
-      $this->productForm->save();
       if($request->isXmlHttpRequest()){
         // TODO: Reload Cart component
         return $this->renderComponent('ShopCart', 'cart');
@@ -62,5 +46,75 @@ class ShopCartActions extends sfActions
       // Redirect to cart with newly added product
       return $this->redirect('cart');
     }
+  }
+
+  public function executeUpdateInCart(sfWebRequest $request)
+  {
+    $params = $this->getFormParams();
+    $action = null;
+    if(isset($params['action']))
+    {
+      $action = $params['action'];
+      unset($params['action']);
+    }
+
+    switch($action){
+      case 'Update':
+        $this->saveShopProduct($params);
+        $this->redirect('cart');
+        break;
+      case 'Remove':
+        $cartProduct = $this->getCartProduct($params);
+        $cartProduct->delete();
+        $this->redirect('cart');
+        break;
+      default:
+        $this->redirect('cart');
+        break;
+    }
+  }
+
+  protected function getFormParams($formClass = "CartProductForm")
+  {
+    // Temporary hack
+    // TODO: Refactoring required. Form created twice.
+    $productForm = new $formClass();
+    return $this->getRequest()->getParameter($productForm->getName());
+  }
+
+  protected function getCartProduct($params, $itemClass = "CartProduct")
+  {
+    $cartProduct = null;
+    if(!empty($params['id']))
+    {
+      $cartProduct = Doctrine::getTable($itemClass)->findOneById($params['id']);
+      $cartProduct->load($params);
+    } else {
+      $cartProduct = new $itemClass();
+      $cartProduct->fromArray($params);
+    }
+    return $cartProduct;
+  }
+
+  protected function saveShopProduct($params, $itemClass = "CartProduct")
+  {
+    $cartProduct = $this->getCartProduct($params, $itemClass);
+    $formClass = $itemClass . "Form";
+    $this->productForm = new $formClass(
+        $cartProduct,
+        [
+            'currency' => $this->getUser()->getCurrencyId(),
+            'request' => $this->getRequest(),
+            'response' => $this->getResponse(),
+            'user' => $this->getUser(),
+        ]
+    );
+    $this->productForm->bind($params);
+
+    if($isValid = $this->productForm->isValid())
+    {
+      $this->productForm->save();
+    }
+    return $isValid;
   }
 }
