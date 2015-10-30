@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class ShopProduct contains one product instance (product or domain)
+ * Class ShopProductPrice represents one billing period price for one product
  */
 class ShopProductPrice
 {
