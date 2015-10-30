@@ -1,9 +1,12 @@
 <div id="pitch">
   <?php if($cart):?>
-      User has cart
-    <?php foreach($cart->getCartProducts() as $cartProduct): ?>
-      <?= $cartProduct; ?>
-    <?php endforeach;?>
+    <div class="cart">
+        <div class="products-list">
+          <?php foreach($products as $product):?>
+            <?php include_partial('FrontendShopCategory/productItem', ['product' => $product, 'productFormPartial' => 'inCartForm']); ?>
+          <?php endforeach; ?>
+        </div>
+    </div>
   <?php else: ?>
       There is no cart yet
   <?php endif; ?>

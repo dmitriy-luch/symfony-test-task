@@ -6,6 +6,6 @@
     <div class="product-description"><?= $product->description ?></div>
   <?php endif; ?>
   <div class="billing-periods">
-    <?php include_partial('addToCartForm', ['productForm' => $product->form]); ?>
+    <?php include_partial($productFormPartial, ['productForm' => $product->form]); ?>
   </div>
 </div>

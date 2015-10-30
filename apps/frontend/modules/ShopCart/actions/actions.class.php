@@ -18,6 +18,19 @@ class ShopCartActions extends sfActions
   public function executeIndex(sfWebRequest $request)
   {
     $this->cart = $this->getUser()->getCart($request);
+    $this->products = [];
+    foreach($this->cart->getCartProducts() as $cartProduct)
+    {
+      $form = new CartProductForm(
+          $cartProduct,
+          [
+              'currency' => $this->getUser()->getCurrencyId(),
+          ]
+      );
+      $product = $cartProduct->getShopProduct();
+      $product->form = $form;
+      $this->products[] = $product;
+    }
   }
 
   public function executeAddToCart(sfWebRequest $request)
