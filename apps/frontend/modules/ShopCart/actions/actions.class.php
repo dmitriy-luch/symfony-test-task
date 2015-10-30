@@ -49,9 +49,5 @@ class ShopCartActions extends sfActions
       // Redirect to cart with newly added product
       return $this->redirect('cart');
     }
-
-    if($request->isXmlHttpRequest()){
-      return $this->renderPartial('FrontendShopCategory/addToCartForm');
-    }
   }
 }

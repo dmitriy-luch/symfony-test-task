@@ -1,3 +1,4 @@
+<?php use_javascript('addToCart'); ?>
 <div id="pitch">
   <span><?= $category->getName() ?></span>
   <span><?= image_tag($category->getWebImagePath()); ?></span>

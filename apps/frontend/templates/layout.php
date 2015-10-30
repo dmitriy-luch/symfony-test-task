@@ -13,6 +13,7 @@
     <div id="header">
       <div id="logo">
         <h1><?= link_to(sfConfig::get('app_name', __('My project')), 'homepage')?></h1>
+        <?php include_component('ShopCart', 'cart'); ?>
       </div>
       <div class="clr"></div>
     </div>

@@ -12,4 +12,46 @@
  */
 class CartProduct extends BaseCartProduct
 {
+  /**
+   * ShopProduct item for current CartProduct
+   *
+   * @var null|ShopProduct
+   */
+  protected $shopProduct = null;
+
+  /**
+   * Get ShopProduct item based on current CartProduct one
+   *
+   * @return null|ShopProduct
+   */
+  public function getShopProduct()
+  {
+    if(!$this->shopProduct)
+    {
+      // Find ShopProduct in case no ShopProduct saved locally
+      $this->shopProduct = ShopProduct::findOneByTypeAndId($this->getType(), $this->getWhmcsPid());
+    }
+    return $this->shopProduct;
+  }
+
+  /**
+   * Get Total CartProduct prices (from ShopProduct item)
+   *
+   * @param $currencyId
+   * @return float Price
+   */
+  public function getTotalPrice($currencyId)
+  {
+    if($this->getShopProduct())
+    {
+      // Get Price object from ShopProduct item for provided currency and current billing period
+      $price = $this->getShopProduct()->getPrice($currencyId, $this->getPeriod());
+      if($price)
+      {
+        // If Price object is found - get it's total value
+        return $price->getTotal();
+      }
+    }
+    return null;
+  }
 }

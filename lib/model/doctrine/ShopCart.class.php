@@ -12,4 +12,40 @@
  */
 class ShopCart extends BaseShopCart
 {
+  /**
+   * @var array Cart total amounts indexed by currency id
+   */
+  protected $cartTotal = [];
+
+  /**
+   * Cart total amount for requested currency id
+   *
+   * @param $currencyId
+   * @return double
+   */
+  public function getCartTotal($currencyId)
+  {
+    if (!isset($this->cartTotal[$currencyId]))
+    {
+      $this->calculateCartTotal($currencyId);
+    }
+    return $this->cartTotal[$currencyId];
+  }
+
+  /**
+   * Calculate Cart total ammount for a currency and save it locally
+   *
+   * @param $currencyId
+   */
+  protected function calculateCartTotal($currencyId)
+  {
+    // Initialize Cart total amount for current currency
+    $this->cartTotal[$currencyId] = 0;
+    // Loop through each of products added to cart
+    foreach ($this->getCartProducts() as $cartProduct)
+    {
+      // Get total price for cart product based on currency id and add it to current total
+      $this->cartTotal[$currencyId] += $cartProduct->getTotalPrice($currencyId);
+    }
+  }
 }

@@ -184,21 +184,43 @@ class ShopProduct
   /**
    * Prices for provided currency
    *
-   * @param $currency int WHMCS Currency ID
+   * @param $currencyId int WHMCS Currency ID
    * @return array
    */
-  public function getPrices($currency)
+  public function getPrices($currencyId)
   {
-    if(!isset($this->prices[$currency]))
+    if(!isset($this->prices[$currencyId]))
     {
       return [];
     }
-    return $this->prices[$currency];
+    return $this->prices[$currencyId];
   }
 
+  /**
+   * Return single price item for provided currency and billing period
+   *
+   * @param $currencyId
+   * @param $billingPeriod
+   * @return null|ShopProductPrice
+   */
+  public function getPrice($currencyId, $billingPeriod)
+  {
+    if(!isset($this->prices[$currencyId]) || !isset($this->prices[$currencyId][$billingPeriod]))
+    {
+      return null;
+    }
+    return $this->prices[$currencyId][$billingPeriod];
+  }
+
+  /**
+   * Find one of Internal products (Product or Domain) based on type and whmcs id
+   *
+   * @param $type string 'domain' or 'product'
+   * @param $id int WHMCS Product(Domain) ID
+   * @return null|ShopProduct
+   */
   public static function findOneByTypeAndId($type, $id)
   {
-    $product = null;
     switch($type)
     {
       case 'domain':
@@ -208,5 +230,7 @@ class ShopProduct
         return new self(Doctrine::getTable('WhmcsProductInternal')->findOneByIdWithPrices($id, Doctrine_Core::HYDRATE_ARRAY));
         break;
     }
+    // TODO: Consider what to do next. Throw an exception, log error
+    return null;
   }
 }

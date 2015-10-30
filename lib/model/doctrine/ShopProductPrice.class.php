@@ -32,6 +32,14 @@ class ShopProductPrice
     $this->currencySuffix = $params['currencySuffix'];
   }
 
+  /**
+   * Representation of price in format
+   * "Billing Period ~ Price with Currency (Base price with Currency + Setup Price with Currency)"
+   * When no setup price available the format is
+   * "Billing Period ~ Price with Currency"
+   *
+   * @return string
+   */
   public function __toString()
   {
     $stringRepresentation = sprintf('%1$s ~ %2$d %3$s', $this->billingPeriod, $this->total, $this->currencySuffix);
@@ -40,5 +48,15 @@ class ShopProductPrice
       $stringRepresentation .= sprintf(' (%1$d %2$s Base + %3$d %2$s Setup)', $this->base, $this->currencySuffix, $this->setup);
     }
     return $stringRepresentation;
+  }
+
+  /**
+   * Getter for Base and Setup values total field
+   *
+   * @return double
+   */
+  public function getTotal()
+  {
+    return $this->total;
   }
 }
