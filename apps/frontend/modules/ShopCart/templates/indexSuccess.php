@@ -3,7 +3,7 @@
     <div class="cart">
         <div class="products-list">
           <?php foreach($products as $product):?>
-            <?php include_partial('FrontendShopCategory/productItem', ['product' => $product, 'productFormPartial' => 'inCartForm']); ?>
+            <?php include_partial('FrontendShopCategory/productItem', ['product' => $product, 'productFormPartial' => 'inCartForm', 'category' => $product->form->getObject()->getShopCategory()]); ?>
           <?php endforeach; ?>
         </div>
     </div>

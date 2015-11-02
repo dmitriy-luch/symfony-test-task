@@ -1,4 +1,7 @@
 <div class="product-item">
+  <?php if(!empty($category)):?>
+    <?= image_tag($category->getWebImagePath(true)); ?>
+  <?php endif;?>
   <?php if($product->type == ShopProduct::TYPE_DOMAIN): ?>
     <span class="product-name"><?= __('Domain with %1% TLD', ['%1%' => $product->name]); ?></span>
   <?php else: ?>
