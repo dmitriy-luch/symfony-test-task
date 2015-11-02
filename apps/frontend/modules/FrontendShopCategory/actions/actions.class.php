@@ -47,6 +47,7 @@ class FrontendShopCategoryActions extends sfActions
         $cartProduct,
         [
           'currency' => $this->getUser()->getCurrencyId(),
+          'action' => CartProductForm::ACTION_ADD,
         ]
       );
       $product->form = $form;

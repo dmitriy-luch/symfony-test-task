@@ -11,6 +11,18 @@
 class CartProductForm extends BaseCartProductForm
 {
   protected $user;
+  const ACTION_ADD = 'Add';
+  const ACTION_UPDATE = 'Update';
+  const ACTION_REMOVE = 'Remove';
+
+  public static function actionsList()
+  {
+    return [
+      self::ACTION_ADD,
+      self::ACTION_UPDATE,
+      self::ACTION_REMOVE,
+    ];
+  }
 
   const FORM_NAME = 'cart_product';
 
@@ -40,6 +52,11 @@ class CartProductForm extends BaseCartProductForm
     $this->setWidget('whmcs_pid', new sfWidgetFormInputHidden());
     $this->setWidget('cart_id', new sfWidgetFormInputHidden());
     $this->setWidget('type', new sfWidgetFormInputHidden());
+    if(isset($this->options['action']))
+    {
+      $this->setWidget('action', new sfWidgetFormInputHidden());
+      $this->setDefault('action', $this->options['action']);
+    }
     $shopProduct = ShopProduct::findOneByTypeAndId($type, $whmcsId);
     $billingPeriods = [];
     if($shopProduct)
@@ -57,7 +74,7 @@ class CartProductForm extends BaseCartProductForm
         'type'        => new sfValidatorString(array('required' => true)),
         'period'      => new sfValidatorChoice(['required' => true, 'choices' => array_keys($billingPeriods)]),
         'params'      => new sfValidatorString(array('required' => false)),
-        'action'      => new sfValidatorChoice(['required' => true, 'choices' => ['Update', 'Delete', 'Add']]),
+        'action'      => new sfValidatorChoice(['required' => true, 'choices' => $this->actionsList()]),
     ));
 
     if($type == 'domain')

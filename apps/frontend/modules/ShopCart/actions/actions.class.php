@@ -19,17 +19,20 @@ class ShopCartActions extends sfActions
   {
     $this->cart = $this->getUser()->getCart($request);
     $this->products = [];
-    foreach($this->cart->getCartProducts() as $cartProduct)
+    if($this->cart)
     {
-      $form = new CartProductForm(
-          $cartProduct,
-          [
-              'currency' => $this->getUser()->getCurrencyId(),
-          ]
-      );
-      $product = $cartProduct->getShopProduct();
-      $product->form = $form;
-      $this->products[] = $product;
+      foreach($this->cart->getCartProducts() as $cartProduct)
+      {
+        $form = new CartProductForm(
+            $cartProduct,
+            [
+                'currency' => $this->getUser()->getCurrencyId(),
+            ]
+        );
+        $product = $cartProduct->getShopProduct();
+        $product->form = $form;
+        $this->products[] = $product;
+      }
     }
   }
 
