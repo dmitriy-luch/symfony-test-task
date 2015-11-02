@@ -1,5 +1,5 @@
 <div class="product-item">
-  <?php if($product->type == 'domain'): ?>
+  <?php if($product->type == ShopProduct::TYPE_DOMAIN): ?>
     <span class="product-name"><?= __('Domain with %1% TLD', ['%1%' => $product->name]); ?></span>
   <?php else: ?>
     <div class="product-name"><?= $product->name ?></div>

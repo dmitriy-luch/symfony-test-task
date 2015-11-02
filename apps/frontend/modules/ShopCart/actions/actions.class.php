@@ -17,38 +17,44 @@ class ShopCartActions extends sfActions
   */
   public function executeIndex(sfWebRequest $request)
   {
+    // Get current cart
     $this->cart = $this->getUser()->getCart($request);
     $this->products = [];
     if($this->cart)
     {
-      foreach($this->cart->getCartProducts() as $cartProduct)
-      {
-        $form = new CartProductForm(
-            $cartProduct,
-            [
-                'currency' => $this->getUser()->getCurrencyId(),
-            ]
-        );
-        $product = $cartProduct->getShopProduct();
-        $product->form = $form;
-        $this->products[] = $product;
-      }
+      // Get cart products with forms if cart exists
+      $this->products = CartProductFormBuilder::init([
+        'request' => $this->getRequest(),
+        'response' => $this->getResponse(),
+        'user' => $this->getUser(),
+      ])->buildFromCart($this->cart);
     }
   }
 
   public function executeAddToCart(sfWebRequest $request)
   {
-    $params = $this->getFormParams();
-
-    if($this->saveShopProduct($params))
+    // Get product with forms by provided request parameters
+    $this->product = CartProductFormBuilder::init([
+        'request' => $this->getRequest(),
+        'response' => $this->getResponse(),
+        'user' => $this->getUser(),
+        'formOptions' => [
+            'action' => CartProductForm::ACTION_ADD,
+        ]
+    ])->buildOneFromParams();
+    // Check if provided params are valid
+    if($isValid = $this->product->form->isValid())
     {
+      // Save new product to cart
+      $this->product->form->save();
       if($request->isXmlHttpRequest()){
-        // TODO: Reload Cart component
+        // Render Cart component in case of AJAX request
         return $this->renderComponent('ShopCart', 'cart');
       }
-      // Redirect to cart with newly added product
+      // Redirect to cart with newly added product for non-Ajax requests
       $this->redirect('cart');
     }
+    // Render just the form in case of validation errors
   }
 
   public function executeUpdateInCart(sfWebRequest $request)

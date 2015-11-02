@@ -31,27 +31,15 @@ class FrontendShopCategoryActions extends sfActions
   {
     // Get current category from route
     $this->category = $this->getRoute()->getObject();
-    // Get all category products (and domains)
-    $this->products = $this->category->getProducts();
-
-    $this->productForms = [];
-    foreach($this->products as $product)
-    {
-      $cartProduct = new CartProduct();
-      $cartProduct->fromArray([
-        'category_id' => $this->category->getId(),
-        'whmcs_pid' => $product->id,
-        'type' => $product->type,
-      ]);
-      $form = new CartProductForm(
-        $cartProduct,
-        [
-          'currency' => $this->getUser()->getCurrencyId(),
+    // Get all category products (and domains) with forms
+    $this->products = CartProductFormBuilder::init([
+        'request' => $this->getRequest(),
+        'response' => $this->getResponse(),
+        'user' => $this->getUser(),
+        'formOptions' => [
           'action' => CartProductForm::ACTION_ADD,
         ]
-      );
-      $product->form = $form;
-    }
+    ])->buildFromCategory($this->category);
 
     // TODO: Refactoring required.
     $request->setAttribute('objectId', $this->category->getId());

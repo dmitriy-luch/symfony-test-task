@@ -38,7 +38,8 @@ class PluginWhmcsDomainTldTable extends Doctrine_Table
     {
         return $this->createQuery('d')
             ->select('d.extension as name')
-            ->addSelect('"domain" as type')
+            ->addSelect('"" as productType')
+            ->addSelect('"' . ShopProduct::TYPE_DOMAIN . '" as type')
             ->addSelect('d.id as id')
             ->addSelect('p.*')
             ->leftJoin('d.Prices as p')
