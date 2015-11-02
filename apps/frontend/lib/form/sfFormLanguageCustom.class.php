@@ -24,9 +24,8 @@ class sfFormLanguageCustom extends sfFormLanguage
 
     $this->setDefault('currency', $currentCurrency);
     $currencyChoices = PluginWhmcsConnection::initConnection()->getCurrencies()->values();
-    $this->setValidator('currency', new sfValidatorChoice(['choices' => $currencyChoices]));
-
-    $this->setWidget('currency', new sfWidgetFormChoice(['choices' => $currencyChoices]));
+    $this->setValidator('currency', new sfValidatorChoice(['choices' => array_keys($currencyChoices)]));
+    $this->setWidget('currency', new sfWidgetFormI18nChoiceCurrency(['currencies' => array_keys($currencyChoices)]));
   }
 
   public function process(sfRequest $request)
