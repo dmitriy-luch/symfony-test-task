@@ -43,3 +43,4 @@ img { outline: 0; border: 0; }
 .flash_success { color: green; }
 .flash_warning { color: orange; }
 .flash_error { color: red; }
+.error_list { color: red; }
