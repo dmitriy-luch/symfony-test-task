@@ -21,10 +21,10 @@ add_to_cart:
   requirements:
     sf_method: [post]
 
-update_in_cart:
-  url:   /updateInCart
+delete_from_cart:
+  url:   /deleteFromCart
   class: sfRequestRoute
-  param: { module: ShopCart, action: updateInCart }
+  param: { module: ShopCart, action: deleteFromCart }
   requirements:
     sf_method: [post]
 

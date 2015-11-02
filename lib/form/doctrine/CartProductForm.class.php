@@ -75,6 +75,12 @@ class CartProductForm extends BaseCartProductForm
     // Create Period widget from Billing Periods list. __toString from each ShopProductPrice is used here.
     $this->setWidget('period', new sfWidgetFormChoice(['choices' => $billingPeriods]));
 
+    // Disable field for Removal form
+    if(isset($this->options['action']) && $this->options['action'] == self::ACTION_REMOVE)
+    {
+      $this->widgetSchema['period']->setAttribute('disabled', 'disabled');
+    }
+
     // Override default validators
     $this->setValidators(
       [
@@ -118,7 +124,7 @@ class CartProductForm extends BaseCartProductForm
     );
 
     // Add additional fields for non-Add forms only
-    if(empty($this->options['action']) || $this->options['action'] != self::ACTION_ADD)
+    if(empty($this->options['action']) || !in_array($this->options['action'], [self::ACTION_ADD, self::ACTION_REMOVE]))
     {
       switch($type)
       {

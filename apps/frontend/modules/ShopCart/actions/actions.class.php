@@ -27,6 +27,9 @@ class ShopCartActions extends sfActions
         'request' => $this->getRequest(),
         'response' => $this->getResponse(),
         'user' => $this->getUser(),
+        'formOptions' => [
+            'action' => CartProductForm::ACTION_REMOVE,
+        ]
       ])->buildFromCart($this->cart);
     }
   }
@@ -57,65 +60,27 @@ class ShopCartActions extends sfActions
     // Render just the form in case of validation errors
   }
 
-  public function executeUpdateInCart(sfWebRequest $request)
+  public function executeDeleteFromCart(sfWebRequest $request)
   {
-    $params = $this->getFormParams();
-    $action = (isset($params['action']))? $params['action'] : null;
-
-    switch($action){
-      case 'Update':
-        $this->saveShopProduct($params);
-        $this->redirect('cart');
-        break;
-      case 'Remove':
-        $cartProduct = $this->getCartProduct($params);
-        $cartProduct->delete();
-        $this->redirect('cart');
-        break;
-      default:
-        $this->redirect('cart');
-        break;
-    }
-  }
-
-  protected function getFormParams($formClass = "CartProductForm")
-  {
-    return $this->getRequest()->getParameter($formClass::FORM_NAME);
-  }
-
-  protected function getCartProduct($params, $itemClass = "CartProduct")
-  {
-    $cartProduct = null;
-    if(!empty($params['id']))
-    {
-      $cartProduct = Doctrine::getTable($itemClass)->findOneById($params['id']);
-      $cartProduct->load($params);
-    } else {
-      $cartProduct = new $itemClass();
-      $cartProduct->fromArray($params);
-    }
-    return $cartProduct;
-  }
-
-  protected function saveShopProduct($params, $itemClass = "CartProduct")
-  {
-    $cartProduct = $this->getCartProduct($params, $itemClass);
-    $formClass = $itemClass . "Form";
-    $this->productForm = new $formClass(
-        $cartProduct,
-        [
-            'currency' => $this->getUser()->getCurrencyId(),
-            'request' => $this->getRequest(),
-            'response' => $this->getResponse(),
-            'user' => $this->getUser(),
+    // Get product with forms by provided request parameters
+    $product = CartProductFormBuilder::init([
+        'request' => $this->getRequest(),
+        'response' => $this->getResponse(),
+        'user' => $this->getUser(),
+        'formOptions' => [
+            'action' => CartProductForm::ACTION_ADD,
         ]
-    );
-    $this->productForm->bind($params);
-
-    if($isValid = $this->productForm->isValid())
+    ])->buildOneFromParams();
+    if(!$product->form->getObject() || !$product->form->getObject()->getId())
     {
-      $this->productForm->save();
+      $this->getUser()->setFlash('error', 'Failed to delete item. Please try again.');
+      // TODO: Log error
     }
-    return $isValid;
+    else
+    {
+      $this->getUser()->setFlash('success', 'Item was successfully deleted.');
+      $product->form->getObject()->delete();
+    }
+    $this->redirect('cart');
   }
 }
