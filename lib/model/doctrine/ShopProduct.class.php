@@ -7,6 +7,11 @@ class ShopProduct
 {
   const WHMCS_PRODUCT_DISABLED_PRICE = -1;
   const WHMCS_DOMAIN_DISABLED_PRICE = 0;
+
+  const TYPE_DOMAIN = 'domain';
+  const TYPE_PRODUCT = 'product';
+
+  const PRODUCT_TYPE_SERVER = 'server';
   /**
    * @var string Product name
    */
@@ -19,6 +24,10 @@ class ShopProduct
    * @var string Product type (domain or product)
    */
   public $type;
+  /**
+   * @var string Product type (VPS, Hosting, Reseller, Other)
+   */
+  public $productType;
   /**
    * @var int Product(Domain) WHMCS ID
    */
@@ -78,13 +87,11 @@ class ShopProduct
    */
   public function __construct($product)
   {
-    // Get Name from incoming product or set empty string
+    // Get Values from incoming product or set empty
     $this->name = (isset($product['name']))? $product['name'] : '';
-    // Get Description from incoming product or set empty string
     $this->description = (isset($product['description']))? $product['description'] : '';
-    // Get Type from incoming product or set null
     $this->type = (isset($product['type']))? $product['type'] : null;
-    // Get Id from incoming product or set null
+    $this->productType = (isset($product['productType']))? $product['productType'] : null;
     $this->id = (isset($product['id']))? $product['id'] : null;
 
     // Get Prices from incoming product or set to empty array
@@ -92,7 +99,7 @@ class ShopProduct
     // Initialize local prices array
     $this->prices = [];
     // Get parse prices function name based on product type
-    $parseFunction = ($this->type == 'product')? 'parseProductPrices' : 'parseDomainPrices';
+    $parseFunction = ($this->type == self::TYPE_PRODUCT)? 'parseProductPrices' : 'parseDomainPrices';
     foreach($prices as $currencyPrices)
     {
       // If no currency or type is provided in current array proceed to the next step
@@ -223,10 +230,10 @@ class ShopProduct
   {
     switch($type)
     {
-      case 'domain':
+      case self::TYPE_DOMAIN:
         return new self(Doctrine::getTable('WhmcsDomainTld')->findOneByIdWithPrices($id, Doctrine_Core::HYDRATE_ARRAY));
         break;
-      case 'product':
+      case self::TYPE_PRODUCT:
         return new self(Doctrine::getTable('WhmcsProductInternal')->findOneByIdWithPrices($id, Doctrine_Core::HYDRATE_ARRAY));
         break;
     }
