@@ -199,7 +199,7 @@ class CartProductFormBuilder
     if(!$cartProduct)
     {
       // If none found - use create method
-      $this->createCartProductByParams($this->getParams());
+      $cartProduct = $this->createCartProductByParams($this->getParams());
     }
     $cartProduct->load($this->getParams());
     return $cartProduct;
