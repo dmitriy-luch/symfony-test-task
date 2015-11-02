@@ -83,4 +83,30 @@ class ShopCartActions extends sfActions
     }
     $this->redirect('cart');
   }
+
+  public function executeUpdateCart(sfWebRequest $request)
+  {
+    $cart = $this->getUser()->getCart();
+    if(!$cart || !$cart->getCartProducts()->count())
+    {
+      $this->getUser()->setFlash('warning', 'Please add at least one product to your cart first.');
+      $this->redirect('homepage');
+    }
+    $this->form = new ShopCartForm(
+      $cart,
+      [
+        'request' => $this->getRequest(),
+        'response' => $this->getResponse(),
+        'user' => $this->getUser(),
+      ]
+    );
+    if($params = $request->getParameter($this->form->getName()))
+    {
+      $this->form->bind($params);
+      if($this->form->isValid())
+      {
+        $this->form->save();
+      }
+    }
+  }
 }

@@ -54,4 +54,9 @@ class CartProduct extends BaseCartProduct
     }
     return null;
   }
+
+  public function __toString()
+  {
+    return $this->getShopProduct()->name;
+  }
 }

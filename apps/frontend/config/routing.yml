@@ -28,6 +28,10 @@ delete_from_cart:
   requirements:
     sf_method: [post]
 
+update_cart:
+  url:   /checkout
+  param: { module: ShopCart, action: updateCart }
+
 category:
   url:   /:sf_culture/category/:name
   class:   sfDoctrineRoute

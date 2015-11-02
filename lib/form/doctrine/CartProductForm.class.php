@@ -43,6 +43,7 @@ class CartProductForm extends BaseCartProductForm
   }
   public function configure()
   {
+    unset($this['params']);
     // Get product type from the CartProduct item
     $type = $this->getObject()->getType();
     // Get WHMCS Product ID from the CartProduct item
@@ -53,8 +54,6 @@ class CartProductForm extends BaseCartProductForm
     $this->setWidget('whmcs_pid', new sfWidgetFormInputHidden());
     $this->setWidget('cart_id', new sfWidgetFormInputHidden());
     $this->setWidget('type', new sfWidgetFormInputHidden());
-    // Not used yet. Implemented for further usage.
-    $this->setWidget('params', new sfWidgetFormInputHidden());
 
     // Add hidden action field in case a value is provided via options
     if(isset($this->options['action']))
@@ -70,7 +69,7 @@ class CartProductForm extends BaseCartProductForm
     $billingPeriods = [];
     if($shopProduct)
     {
-      $billingPeriods = $shopProduct->getPrices($this->options['currency']);
+      $billingPeriods = $shopProduct->getPrices($this->options['user']->getCurrencyId());
     }
     // Create Period widget from Billing Periods list. __toString from each ShopProductPrice is used here.
     $this->setWidget('period', new sfWidgetFormChoice(['choices' => $billingPeriods]));
@@ -107,11 +106,6 @@ class CartProductForm extends BaseCartProductForm
           [
             'required' => true,
             'choices' => array_keys($billingPeriods)
-          ]
-        ),
-        'params'=> new sfValidatorString(
-          [
-            'required' => false
           ]
         ),
         'action'=> new sfValidatorChoice(
@@ -154,6 +148,16 @@ class CartProductForm extends BaseCartProductForm
         case ShopProduct::PRODUCT_TYPE_SERVER:
           // Add VPS/Dedicated Server fields in case current ShopProduct type is server
           $this->fillServerWidgetsAndValidators();
+          $this->mergePostValidator(new sfValidatorCallback(
+              [
+                'callback' => [$this, 'cleanServerAdditionalFields'],
+              ],
+              [
+                'invalid' => 'Additional fields values invalid.'
+              ]
+            )
+          );
+          $this->parseAdditionalFields();
           break;
       }
     }
@@ -198,6 +202,16 @@ class CartProductForm extends BaseCartProductForm
   {
     $this->fillDomainWidgets();
     $this->fillDomainValidators();
+    $this->parseAdditionalFields();
+    $this->mergePostValidator(new sfValidatorCallback(
+            [
+                'callback' => [$this, 'cleanDomainAdditionalFields'],
+            ],
+            [
+                'invalid' => 'Additional fields values invalid.'
+            ]
+        )
+    );
   }
 
   /**
@@ -248,12 +262,13 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('lastname', new sfValidatorString());
     $this->setValidator('companyname', new sfValidatorString());
     $this->setValidator('email', new sfValidatorEmail());
-    $this->setValidator('address1', new sfValidatorEmail());
-    $this->setValidator('address2', new sfValidatorEmail());
-    $this->setValidator('city', new sfValidatorEmail());
-    $this->setValidator('state', new sfValidatorEmail());
-    $this->setValidator('country', new sfValidatorEmail());
-    $this->setValidator('phonenumber', new sfValidatorEmail());
+    $this->setValidator('address1', new sfValidatorString());
+    $this->setValidator('address2', new sfValidatorString());
+    $this->setValidator('city', new sfValidatorString());
+    $this->setValidator('state', new sfValidatorString());
+    $this->setValidator('postcode', new sfValidatorString());
+    $this->setValidator('country', new sfValidatorString());
+    $this->setValidator('phonenumber', new sfValidatorString());
     $this->setValidator('generalemails', new sfValidatorBoolean());
     $this->setValidator('productemails', new sfValidatorBoolean());
     $this->setValidator('domainemails', new sfValidatorBoolean());
@@ -308,5 +323,79 @@ class CartProductForm extends BaseCartProductForm
       // TODO: Add error to form if possible or throw an exception
     }
     return $cart->getId();
+  }
+
+  public function cleanServerAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
+  {
+    $values = $this->combineAdditionalFields(
+      [
+        'hostname',
+        'ns1prefix',
+        'ns2prefix',
+        'rootpw'
+      ],
+      $values
+    );
+    return $values;
+  }
+
+  public function cleanDomainAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
+  {
+    $values = $this->combineAdditionalFields(
+      [
+        'dnsmanagement',
+        'emailforwarding',
+        'idprotection',
+        'nameserver2',
+        'nameserver3',
+        'nameserver4',
+        'firstname',
+        'lastname',
+        'companyname',
+        'email',
+        'address1',
+        'address2',
+        'city',
+        'state',
+        'postcode',
+        'country',
+        'phonenumber',
+        'generalemails',
+        'productemails',
+        'domainemails',
+        'invoiceemails',
+        'supportemails',
+      ],
+      $values
+    );
+    return $values;
+  }
+
+  protected function combineAdditionalFields($fieldsList, $values)
+  {
+    $result = [];
+    foreach ($fieldsList as $field)
+    {
+      if(!isset($values[$field]))
+      {
+        // TODO: Add an error
+      }
+      $result[$field] = $values[$field];
+      unset($values[$field]);
+    }
+    $values['params'] = json_encode($result);
+    return $values;
+  }
+
+  protected function parseAdditionalFields()
+  {
+    $params = $this->getObject()->getParams();
+    if(!empty($params)){
+      $paramsData = json_decode($params);
+      foreach($paramsData as $paramKey => $paramValue)
+      {
+        $this->setDefault($paramKey, $paramValue);
+      }
+    }
   }
 }

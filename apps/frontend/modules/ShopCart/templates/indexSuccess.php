@@ -6,6 +6,7 @@
             <?php include_partial('FrontendShopCategory/productItem', ['product' => $product, 'productFormPartial' => 'inCartForm', 'category' => $product->form->getObject()->getShopCategory()]); ?>
           <?php endforeach; ?>
         </div>
+      <?= link_to('Checkout', 'update_cart'); ?>
     </div>
   <?php else: ?>
       There is no cart yet
