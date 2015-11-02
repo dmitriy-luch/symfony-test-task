@@ -40,3 +40,6 @@ img { outline: 0; border: 0; }
 #links { float: right; }
 #links a { margin: 0 0 0 10px; }
 #footer p { margin: 0 0 8px; }
+.flash_success { color: green; }
+.flash_warning { color: orange; }
+.flash_error { color: red; }

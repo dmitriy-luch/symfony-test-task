@@ -26,6 +26,9 @@
         <?php if ($sf_user->hasFlash('warning')): ?>
           <h2 class="flash_warning"><?php echo $sf_user->getFlash('warning') ?></h2>
         <?php endif ?>
+        <?php if ($sf_user->hasFlash('success')): ?>
+          <h2 class="flash_success"><?php echo $sf_user->getFlash('success') ?></h2>
+        <?php endif ?>
       </div>
       <div class="view-content">
         <?php echo $sf_content ?>
