@@ -59,4 +59,16 @@ class CartProduct extends BaseCartProduct
   {
     return $this->getShopProduct()->name;
   }
+
+  /**
+   * Return value of requested field from Params
+   *
+   * @param $field
+   * @return null|string
+   */
+  public function getParamValue($field)
+  {
+    $params = json_decode($this->getParams());
+    return (!empty($params->$field))? $params->$field : null;
+  }
 }
