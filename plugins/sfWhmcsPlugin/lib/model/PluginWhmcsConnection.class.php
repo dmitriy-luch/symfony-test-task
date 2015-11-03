@@ -25,6 +25,11 @@ class PluginWhmcsConnection
   protected $currencies = false;
 
   /**
+   * @var array List of payment methods
+   */
+  protected $paymentMethods = false;
+
+  /**
    * @var SimpleXmlElement Client object
    */
   protected $client = false;
@@ -142,6 +147,44 @@ class PluginWhmcsConnection
     }
     // Save currencies array in the current connection instance
     $this->currencies = new $this->config['currencies_class']($currencies->currencies->currency);
+    return true;
+  }
+
+  /**
+   * Get all payment methods from WHMCS system
+   *
+   * @param bool $reload Whether to reload payment methods from WHMCS or not. Defaults to False
+   *
+   * @return array List of payment methods from WHMCS or an empty array in case of error or if none found;
+   */
+  public function getPaymentMethods($reload = false)
+  {
+    if ($reload || !$this->paymentMethods)
+    {
+      $this->loadPaymentMethods();
+    }
+    return $this->paymentMethods;
+  }
+
+  /**
+   * Load list of WHMCS payment methods and save into the object
+   *
+   * @return bool Whether the load was successful or not
+   */
+  protected function loadPaymentMethods()
+  {
+    $this->paymentMethods = [];
+    $paymentMethodsResult = $this->apiCall('WHMCS_Invoice', 'get_payment_methods');
+    if (empty($paymentMethodsResult) || empty($paymentMethodsResult->paymentmethods) || empty($paymentMethodsResult->paymentmethods->paymentmethod))
+    {
+      // TODO: Log error. Some error occurred. No payment methods provided by WHMCS
+      return false;
+    }
+
+    foreach ($paymentMethodsResult->paymentmethods->paymentmethod as $paymentMethod)
+    {
+      $this->paymentMethods[(string)$paymentMethod->module] = (string)$paymentMethod->displayname;
+    }
     return true;
   }
 

@@ -32,6 +32,10 @@ update_cart:
   url:   /checkout
   param: { module: ShopCart, action: updateCart }
 
+billing:
+  url:   /billing
+  param: { module: ShopCart, action: billing }
+
 category:
   url:   /:sf_culture/category/:name
   class:   sfDoctrineRoute

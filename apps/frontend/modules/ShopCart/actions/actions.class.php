@@ -18,20 +18,16 @@ class ShopCartActions extends sfActions
   public function executeIndex(sfWebRequest $request)
   {
     // Get current cart
-    $this->cart = $this->getUser()->getCart($request);
-    $this->products = [];
-    if($this->cart)
-    {
-      // Get cart products with forms if cart exists
-      $this->products = CartProductFormBuilder::init([
-        'request' => $this->getRequest(),
-        'response' => $this->getResponse(),
-        'user' => $this->getUser(),
-        'formOptions' => [
-            'action' => CartProductForm::ACTION_REMOVE,
-        ]
-      ])->buildFromCart($this->cart);
-    }
+    $this->cart = $this->getCartOrRedirect();
+    // Get cart products with forms if cart exists
+    $this->products = CartProductFormBuilder::init([
+      'request' => $this->getRequest(),
+      'response' => $this->getResponse(),
+      'user' => $this->getUser(),
+      'formOptions' => [
+          'action' => CartProductForm::ACTION_REMOVE,
+      ]
+    ])->buildFromCart($this->cart);
   }
 
   public function executeAddToCart(sfWebRequest $request)
@@ -86,12 +82,7 @@ class ShopCartActions extends sfActions
 
   public function executeUpdateCart(sfWebRequest $request)
   {
-    $cart = $this->getUser()->getCart();
-    if(!$cart || !$cart->getCartProducts()->count())
-    {
-      $this->getUser()->setFlash('warning', 'Please add at least one product to your cart first.');
-      $this->redirect('homepage');
-    }
+    $cart = $this->getCartOrRedirect();
     $this->form = new ShopCartForm(
       $cart,
       [
@@ -106,7 +97,40 @@ class ShopCartActions extends sfActions
       if($this->form->isValid())
       {
         $this->form->save();
+        $this->redirect('billing');
       }
     }
+  }
+
+  public function executeBilling(sfWebRequest $request)
+  {
+    $this->getCartOrRedirect();
+    $this->form = new ShopCartBillingForm(
+      null,
+      [
+          'user' => $this->getUser(),
+      ]
+    );
+    if($params = $request->getParameter($this->form->getName()))
+    {
+      $this->form->bind($params);
+      if($this->form->isValid())
+      {
+        // TODO: Proceed with order creation and remove cart
+        $this->form->save();
+        // TODO: Redirect to success page
+      }
+    }
+  }
+
+  protected function getCartOrRedirect()
+  {
+    $cart = $this->getUser()->getCart($this->getRequest());
+    if(!$cart || !$cart->getCartProducts()->count())
+    {
+      $this->getUser()->setFlash('warning', 'Please add at least one product to your cart first.');
+      $this->redirect('homepage');
+    }
+    return $cart;
   }
 }
