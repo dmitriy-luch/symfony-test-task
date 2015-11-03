@@ -176,7 +176,7 @@ class ShopProduct
       // Get current billing period year
       $year = $index+1;
       // Initialize current billing period with base price and type
-      $result[$index] = new ShopProductPrice(
+      $result[$year] = new ShopProductPrice(
         [
           'billingPeriod' => "$year year",
           'base' => $prices[$priceField],
