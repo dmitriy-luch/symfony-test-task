@@ -66,17 +66,25 @@ class ShopCartBillingForm extends sfForm
   protected function generateProductsParams($cartProduct)
   {
     $result = [];
-
     switch($cartProduct->type)
     {
       case ShopProduct::TYPE_PRODUCT:
-        $result = array_merge($result, $this->generateServiceProductParams($cartProduct));
+        $result = array_merge($result, $this->generateServerParams($cartProduct));
         break;
       case ShopProduct::TYPE_DOMAIN:
         $result = array_merge($result, $this->generateDomainParams($cartProduct));
         break;
     }
 
+    foreach($cartProduct->getAdditionalFieldKeys() as $additionalField)
+    {
+      $additionalFieldValue = $cartProduct->getParamValue($additionalField);
+      // Fill in the value in case it exists in Params and not yet field in the result
+      if(!empty($additionalFieldValue) && empty($result[$additionalField]))
+      {
+        $result[$additionalField] = $additionalFieldValue;
+      }
+    }
     return $result;
   }
 
@@ -86,7 +94,7 @@ class ShopCartBillingForm extends sfForm
    * @param $cartProduct
    * @return array Params
    */
-  protected function generateServiceProductParams($cartProduct)
+  protected function generateServerParams($cartProduct)
   {
     return [
       'pid' => $cartProduct->getWhmcsPid(),

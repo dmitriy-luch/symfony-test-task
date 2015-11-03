@@ -343,12 +343,7 @@ class CartProductForm extends BaseCartProductForm
   public function cleanServerAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
   {
     $values = $this->combineAdditionalFields(
-      [
-        'hostname',
-        'ns1prefix',
-        'ns2prefix',
-        'rootpw'
-      ],
+      PluginWhmcsConnection::getServerAdditionalFields(),
       $values
     );
     return $values;
@@ -357,31 +352,7 @@ class CartProductForm extends BaseCartProductForm
   public function cleanDomainAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
   {
     $values = $this->combineAdditionalFields(
-      [
-        'domain',
-        'dnsmanagement',
-        'emailforwarding',
-        'idprotection',
-        'nameserver2',
-        'nameserver3',
-        'nameserver4',
-        'firstname',
-        'lastname',
-        'companyname',
-        'email',
-        'address1',
-        'address2',
-        'city',
-        'state',
-        'postcode',
-        'country',
-        'phonenumber',
-        'generalemails',
-        'productemails',
-        'domainemails',
-        'invoiceemails',
-        'supportemails',
-      ],
+      PluginWhmcsConnection::getDomainAdditionalFields(),
       $values
     );
     return $values;

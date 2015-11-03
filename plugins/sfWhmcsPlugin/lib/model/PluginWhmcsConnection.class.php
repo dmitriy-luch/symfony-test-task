@@ -287,4 +287,43 @@ class PluginWhmcsConnection
     }
     return false;
   }
+
+  public static function getServerAdditionalFields()
+  {
+    return [
+      'hostname',
+      'ns1prefix',
+      'ns2prefix',
+      'rootpw'
+    ];
+  }
+
+  public static function getDomainAdditionalFields()
+  {
+    return [
+        'domain',
+        'dnsmanagement',
+        'emailforwarding',
+        'idprotection',
+        'nameserver2',
+        'nameserver3',
+        'nameserver4',
+        'firstname',
+        'lastname',
+        'companyname',
+        'email',
+        'address1',
+        'address2',
+        'city',
+        'state',
+        'postcode',
+        'country',
+        'phonenumber',
+        'generalemails',
+        'productemails',
+        'domainemails',
+        'invoiceemails',
+        'supportemails',
+    ];
+  }
 }

@@ -71,4 +71,22 @@ class CartProduct extends BaseCartProduct
     $params = json_decode($this->getParams());
     return (!empty($params->$field))? $params->$field : null;
   }
+
+  public function getAdditionalFieldKeys()
+  {
+    $additionalFieldKeys = [];
+    switch($this->getType())
+    {
+      case ShopProduct::TYPE_PRODUCT:
+        if($this->getShopProduct()->productType == ShopProduct::PRODUCT_TYPE_SERVER)
+        {
+          $additionalFieldKeys = PluginWhmcsConnection::getServerAdditionalFields();
+        }
+        break;
+      case ShopProduct::TYPE_DOMAIN:
+        $additionalFieldKeys = PluginWhmcsConnection::getDomainAdditionalFields();
+        break;
+    }
+    return $additionalFieldKeys;
+  }
 }
