@@ -1,6 +1,8 @@
 ShopCart:
   actAs:
     Timestampable: ~
+  columns:
+    client_id: { type: integer }
 
 CartProduct:
   columns:

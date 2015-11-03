@@ -48,4 +48,19 @@ class ShopCart extends BaseShopCart
       $this->cartTotal[$currencyId] += $cartProduct->getTotalPrice($currencyId);
     }
   }
+
+  /**
+   * Get Client from WHMCS if client_id is set
+   *
+   * @return null|SimpleXmlElement WHMCS Client object
+   */
+  public function getClient()
+  {
+    $clientId = $this->getClientId();
+    if(!empty($clientId))
+    {
+      return PluginWhmcsConnection::initConnection()->getClientById($clientId);
+    }
+    return null;
+  }
 }

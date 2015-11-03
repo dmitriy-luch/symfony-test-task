@@ -25,6 +25,11 @@ class PluginWhmcsConnection
   protected $currencies = false;
 
   /**
+   * @var SimpleXmlElement Client object
+   */
+  protected $client = false;
+
+  /**
    * Class constructor
    *
    * @param array $params An optional array of connection details.
@@ -155,5 +160,72 @@ class PluginWhmcsConnection
       return false;
     }
     return $apiResult;
+  }
+
+  /**
+   * Get client by email from WHMCS system
+   *
+   * @param string $email Customer email
+   * @param bool $reload Whether to reload client from WHMCS or not. Defaults to False
+   *
+   * @return SimpleXmlElement Customer from WHMCS or false in case of error or if none found;
+   */
+  public function getClientByEmail($email, $reload = false)
+  {
+    if ($reload || empty($this->client) || $this->client->email != $email)
+    {
+      $this->loadClient(['email' => $email]);
+    }
+    return $this->client;
+  }
+
+  /**
+   * Get client by ID from WHMCS system
+   *
+   * @param int $clientId Customer ID
+   * @param bool $reload Whether to reload client from WHMCS or not. Defaults to False
+   *
+   * @return SimpleXmlElement Customer from WHMCS or false in case of error or if none found;
+   */
+  public function getClientById($clientId, $reload = false)
+  {
+    if ($reload || empty($this->client) || $this->client->id != $clientId)
+    {
+      $this->loadClient(['clientid' => $clientId]);
+    }
+    return $this->client;
+  }
+
+  /**
+   * Load client from WHMCS system by the provided params
+   * @param $params
+   */
+  protected function loadClient($params)
+  {
+    $this->client = null;
+    $result = $this->apiCall('WHMCS_Client', 'get_clients_details', $params);
+    if(!empty($result))
+    {
+      $this->client = $result;
+    }
+  }
+
+  /**
+   * Create client in WHMCS system by provided params
+   *
+   * @param $params
+   * @return SimpleXmlElement WHMCS Client
+   */
+  public function createClient($params)
+  {
+    if(!$this->getClientByEmail($params['email']))
+    {
+      $result = $this->apiCall('WHMCS_Client', 'add_client', $params);
+      if(!empty($result))
+      {
+        return $this->getClientById($result->clientid);
+      }
+    }
+    return $this->client;
   }
 }
