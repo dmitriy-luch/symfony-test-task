@@ -282,7 +282,7 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('city', new sfValidatorString());
     $this->setValidator('state', new sfValidatorString());
     $this->setValidator('postcode', new sfValidatorString());
-    $this->setValidator('country', new sfValidatorString());
+    $this->setValidator('country', new sfValidatorI18nChoiceCountry());
     $this->setValidator('phonenumber', new sfValidatorString());
     $this->setValidator('generalemails', new sfValidatorBoolean());
     $this->setValidator('productemails', new sfValidatorBoolean());
@@ -304,7 +304,7 @@ class CartProductForm extends BaseCartProductForm
     $this->setWidget('city', new sfWidgetFormInputText());
     $this->setWidget('state', new sfWidgetFormInputText());
     $this->setWidget('postcode', new sfWidgetFormInputText(['label' => 'Post Code']));
-    $this->setWidget('country', new sfWidgetFormInputText());
+    $this->setWidget('country', new sfWidgetFormI18nChoiceCountry(['label' => 'Country (2-letter code)']));
     $this->setWidget('phonenumber', new sfWidgetFormInputText(['label' => 'Phone number']));
     $this->setWidget('generalemails', new sfWidgetFormInputCheckbox(['label' => 'Receive general emails']));
     $this->setWidget('productemails', new sfWidgetFormInputCheckbox(['label' => 'Receive product related emails']));
