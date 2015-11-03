@@ -15,6 +15,8 @@ class CartProductForm extends BaseCartProductForm
   const ACTION_UPDATE = 'Update';
   const ACTION_REMOVE = 'Remove';
 
+  protected $internalParams;
+
   /**
    * List of available actions
    *
@@ -37,6 +39,14 @@ class CartProductForm extends BaseCartProductForm
     {
       // User, Request and Response are required to build product form
       throw new Exception('user, request and response are required');
+    }
+
+    // Save current Params values for further usage in validators and cleaners
+    $currentParams = $object->getParams();
+    $options['productParams'] = [];
+    if(!empty($currentParams))
+    {
+      $options['productParams'] = json_decode($currentParams);
     }
 
     parent::__construct($object, $options, $CSRFSecret);
@@ -192,7 +202,8 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('hostname', new sfValidatorString(['required' => true]));
     $this->setValidator('ns1prefix', new sfValidatorString(['required' => true]));
     $this->setValidator('ns2prefix', new sfValidatorString(['required' => true]));
-    $this->setValidator('rootpw', new sfValidatorString(['required' => true]));
+    $passwordRequired = empty($this->options['productParams']->rootpw);
+    $this->setValidator('rootpw', new sfValidatorString(['required' => $passwordRequired]));
   }
 
   /**
@@ -225,6 +236,8 @@ class CartProductForm extends BaseCartProductForm
     // Domain fields might be required for order creation. A hidden validator might be needed here.
     //domainfields - a base64 encoded serialized array of the TLD specific field values
 
+    $this->setWidget('domain', new sfWidgetFormInputText(['label' => 'Domain name']));
+
     $this->setWidget('dnsmanagement', new sfWidgetFormInputCheckbox(['label' => 'Enable DNS Management']));
     $this->setWidget('emailforwarding', new sfWidgetFormInputCheckbox(['label' => 'Enable Email Forwarding']));
     $this->setWidget('idprotection', new sfWidgetFormInputCheckbox(['label' => 'Enable ID Protection']));
@@ -244,6 +257,8 @@ class CartProductForm extends BaseCartProductForm
 
     // In case domain field are required for order creation a required validator is needed here
     //domainfields - a base64 encoded serialized array of the TLD specific field values
+
+    $this->setValidator('domain', new sfValidatorString());
 
     $this->setValidator('dnsmanagement', new sfValidatorBoolean());
     $this->setValidator('emailforwarding', new sfValidatorBoolean());
@@ -343,6 +358,7 @@ class CartProductForm extends BaseCartProductForm
   {
     $values = $this->combineAdditionalFields(
       [
+        'domain',
         'dnsmanagement',
         'emailforwarding',
         'idprotection',
@@ -371,31 +387,42 @@ class CartProductForm extends BaseCartProductForm
     return $values;
   }
 
+  /**
+   * Combine all the provided fields with the default ones and save into params field
+   *
+   * @param $fieldsList array Field names list to combine
+   * @param $values array Values list from post-validator
+   * @return array Updated values list
+   */
   protected function combineAdditionalFields($fieldsList, $values)
   {
     $result = [];
     foreach ($fieldsList as $field)
     {
-      if(!isset($values[$field]))
+      // Fill in default value
+      $result[$field] = (!empty($this->options['productParams']->$field))? $this->options['productParams']->$field : null;
+
+      if(!empty($values[$field]))
       {
-        // TODO: Add an error
+        // Override default value in case new one is provided
+        $result[$field] = $values[$field];
+        // Unset from values array so that it won't be used for Update
+        unset($values[$field]);
       }
-      $result[$field] = $values[$field];
-      unset($values[$field]);
     }
+    // Save result into params
     $values['params'] = json_encode($result);
     return $values;
   }
 
+  /**
+   * Parse additional field provided in Params and set default values for each of them
+   */
   protected function parseAdditionalFields()
   {
-    $params = $this->getObject()->getParams();
-    if(!empty($params)){
-      $paramsData = json_decode($params);
-      foreach($paramsData as $paramKey => $paramValue)
-      {
-        $this->setDefault($paramKey, $paramValue);
-      }
+    foreach($this->options['productParams'] as $paramKey => $paramValue)
+    {
+      $this->setDefault($paramKey, $paramValue);
     }
   }
 }
