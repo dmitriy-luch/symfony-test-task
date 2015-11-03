@@ -197,7 +197,7 @@ class PluginWhmcsConnection
   protected function apiCall($class, $method, $params = [])
   {
     $apiResult = call_user_func([$class, $method], $params);
-    if($apiResult->result != WHMCS_Base::SUCCESS)
+    if(empty($apiResult->result) || $apiResult->result != WHMCS_Base::SUCCESS)
     {
       // TODO: Log error. Request issues
       return false;
@@ -270,5 +270,21 @@ class PluginWhmcsConnection
       }
     }
     return $this->client;
+  }
+
+  /**
+   * Create new order based on provided params
+   *
+   * @param $params
+   * @return bool|SimpleXmlElement Newly created order or false in case of error
+   */
+  public function createOrder($params)
+  {
+    $result = $this->apiCall('WHMCS_Order', 'add_order', $params);
+    if(!empty($result) && !empty($result->orderid))
+    {
+      return $result;
+    }
+    return false;
   }
 }

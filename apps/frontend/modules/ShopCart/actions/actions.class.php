@@ -114,10 +114,10 @@ class ShopCartActions extends sfActions
     if($params = $request->getParameter($this->form->getName()))
     {
       $this->form->bind($params);
-      if($this->form->isValid())
+      if($this->form->isValid() && $order = $this->form->createOrder())
       {
-        // TODO: Proceed with order creation and remove cart
-        $this->form->save();
+        $this->getUser()->setFlash('success', 'Order successfully created. Your order ID is #' . $order->orderid);
+        // TODO: Remove cart
         // TODO: Redirect to success page
       }
     }
