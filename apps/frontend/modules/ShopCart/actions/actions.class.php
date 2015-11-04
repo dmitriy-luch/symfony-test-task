@@ -114,11 +114,19 @@ class ShopCartActions extends sfActions
     if($params = $request->getParameter($this->form->getName()))
     {
       $this->form->bind($params);
-      if($this->form->isValid() && $order = $this->form->createOrder())
+      if ($this->form->isValid())
       {
-        $this->getUser()->setFlash('success', 'Order successfully created. Your order ID is #' . $order->orderid);
-        // TODO: Remove cart
-        // TODO: Redirect to success page
+        $order = $this->form->createOrder();
+        if ($order)
+        {
+          $this->getUser()->setFlash('success', 'Order successfully created. Your order ID is #' . $order->orderid);
+          $this->getUser()->removeCart($order->orderid, $this->getResponse());
+          $this->redirect('homepage');
+        }
+        else
+        {
+          $this->getUser()->setFlash('error', 'Order creation failed. Please try again.');
+        }
       }
     }
   }

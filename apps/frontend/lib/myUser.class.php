@@ -90,8 +90,8 @@ class myUser extends sfBasicSecurityUser
       return null;
     }
 
-    $cartToken = $this->getAttribute('cart');
-    return Doctrine::getTable('ShopCart')->findOneById($cartToken);
+    $cartId = $this->getAttribute('cart');
+    return Doctrine::getTable('ShopCart')->findOneById($cartId);
   }
 
   public function createCart($response)
@@ -138,5 +138,18 @@ class myUser extends sfBasicSecurityUser
     return PluginWhmcsConnection::initConnection()
         ->getCurrencies()
         ->findByCode($this->getCurrency());
+  }
+
+  public function removeCart($orderId, $response)
+  {
+    $cart = $this->getCart();
+    if($cart)
+    {
+      $cart->delete();
+      // Remove from session
+      $this->setAttribute('cart', null);
+      // Remove from cookie
+      $this->setCartToCookie($response, null);
+    }
   }
 }

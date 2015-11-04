@@ -25,3 +25,4 @@ CartProduct:
       foreignAlias: CartProducts
       type: one
       foreignType: many
+      onDelete: CASCADE
