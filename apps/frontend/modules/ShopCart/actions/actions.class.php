@@ -120,7 +120,7 @@ class ShopCartActions extends sfActions
         if ($order)
         {
           $this->getUser()->setFlash('success', 'Order successfully created. Your order ID is #' . $order->orderid);
-          $this->getUser()->removeCart($order->orderid, $this->getResponse());
+          $this->getUser()->removeCart($this->getResponse());
           $this->redirect('homepage');
         }
         else
