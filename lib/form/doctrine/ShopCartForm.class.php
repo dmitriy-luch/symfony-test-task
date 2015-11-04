@@ -98,7 +98,7 @@ class ShopCartForm extends BaseShopCartForm
       $client = $this->createClient($values);
     }
     $values['client_id'] = $client->id;
-    $this->unsetClientFields();
+    $values = $this->unsetClientFields($values);
     return $values;
   }
 
@@ -116,6 +116,7 @@ class ShopCartForm extends BaseShopCartForm
         unset($values[$clientField]);
       }
     }
+    return $values;
   }
 
   /**
