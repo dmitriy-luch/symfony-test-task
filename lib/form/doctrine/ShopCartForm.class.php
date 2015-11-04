@@ -172,6 +172,7 @@ class ShopCartForm extends BaseShopCartForm
         $params[$clientField] = $values[$clientField];
       }
     }
+    $params['currency'] = $this->options['user']->getCurrencyId();
     return PluginWhmcsConnection::initConnection()->createClient($params);
   }
 }
