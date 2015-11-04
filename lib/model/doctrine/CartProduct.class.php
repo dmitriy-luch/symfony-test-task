@@ -66,9 +66,13 @@ class CartProduct extends BaseCartProduct
    * @param $field
    * @return null|string
    */
-  public function getParamValue($field)
+  public function getParamValue($field, $parent = null)
   {
     $params = json_decode($this->getParams());
+    if($parent)
+    {
+      return (!empty($params->$parent->$field))? $params->$parent->$field : null;
+    }
     return (!empty($params->$field))? $params->$field : null;
   }
 
