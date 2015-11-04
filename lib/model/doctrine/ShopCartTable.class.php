@@ -16,4 +16,20 @@ class ShopCartTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('ShopCart');
     }
+
+    /**
+     * Remove carts older that provided number of days
+     *
+     * @param $daysOld Number of days old
+     * @return int Number of removed records
+     * @throws Doctrine_Query_Exception
+     */
+    public function removeOldCarts($daysOld)
+    {
+        $result = $this->createQuery('c')
+            ->andWhere('DATEDIFF(NOW(), updated_at) > ?', $daysOld)
+            ->delete()
+            ->execute();
+        return $result;
+    }
 }
