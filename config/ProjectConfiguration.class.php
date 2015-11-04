@@ -14,7 +14,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     $this->enablePlugins('sfTaskExtraPlugin');
     $this->enablePlugins('sfWhmcsPlugin');
     $this->enablePlugins('sfThumbnailPlugin');
-    $this->enablePlugins('sfRedisCachePlugin');
+    $this->enablePlugins('sfRedisPlugin');
 
     // loadHelpers does not exists when running from CLI
     if(php_sapi_name() !== 'cli')
