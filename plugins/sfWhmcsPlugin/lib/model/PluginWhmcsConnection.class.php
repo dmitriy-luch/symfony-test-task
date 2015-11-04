@@ -288,6 +288,11 @@ class PluginWhmcsConnection
     return false;
   }
 
+  /**
+   * Additional fields keys for Server product type
+   *
+   * @return array
+   */
   public static function getServerAdditionalFields()
   {
     return [
@@ -298,16 +303,33 @@ class PluginWhmcsConnection
     ];
   }
 
+  /**
+   * Additional fields keys for Domain
+   *
+   * @return array
+   */
   public static function getDomainAdditionalFields()
   {
     return [
-        'domain',
-        'dnsmanagement',
-        'emailforwarding',
-        'idprotection',
-        'nameserver2',
-        'nameserver3',
-        'nameserver4',
+      'domain',
+      'dnsmanagement',
+      'emailforwarding',
+      'idprotection',
+      'nameserver2',
+      'nameserver3',
+      'nameserver4',
+      'contactid' => self::getContactFields(),
+    ];
+  }
+
+  /**
+   * Additional fields keys for Contact
+   *
+   * @return array
+   */
+  public static function getContactFields()
+  {
+    return [
         'firstname',
         'lastname',
         'companyname',
@@ -325,5 +347,21 @@ class PluginWhmcsConnection
         'invoiceemails',
         'supportemails',
     ];
+  }
+
+  /**
+   * Create contact in WHMCS system by provided params
+   *
+   * @param $params
+   * @return SimpleXmlElement WHMCS Client ID
+   */
+  public function createContact($params)
+  {
+    $result = $this->apiCall('WHMCS_Client', 'add_contact', $params);
+    if(!empty($result))
+    {
+      return $result->contactid;
+    }
+    return null;
   }
 }

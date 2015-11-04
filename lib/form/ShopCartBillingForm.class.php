@@ -76,13 +76,12 @@ class ShopCartBillingForm extends sfForm
         break;
     }
 
-    foreach($cartProduct->getAdditionalFieldKeys() as $additionalField)
+    foreach($cartProduct->getDecodedParams() as $key => $additionalField)
     {
-      $additionalFieldValue = $cartProduct->getParamValue($additionalField);
       // Fill in the value in case it exists in Params and not yet field in the result
-      if(!empty($additionalFieldValue) && empty($result[$additionalField]))
+      if(!empty($additionalField) && empty($result[$key]))
       {
-        $result[$additionalField] = $additionalFieldValue;
+        $result[$key] = $additionalField;
       }
     }
     return $result;

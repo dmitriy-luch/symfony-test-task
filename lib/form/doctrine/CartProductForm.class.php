@@ -40,15 +40,6 @@ class CartProductForm extends BaseCartProductForm
       // User, Request and Response are required to build product form
       throw new Exception('user, request and response are required');
     }
-
-    // Save current Params values for further usage in validators and cleaners
-    $currentParams = $object->getParams();
-    $options['productParams'] = [];
-    if(!empty($currentParams))
-    {
-      $options['productParams'] = json_decode($currentParams);
-    }
-
     parent::__construct($object, $options, $CSRFSecret);
   }
   public function configure()
@@ -160,7 +151,7 @@ class CartProductForm extends BaseCartProductForm
           $this->fillServerWidgetsAndValidators();
           $this->mergePostValidator(new sfValidatorCallback(
               [
-                'callback' => [$this, 'cleanServerAdditionalFields'],
+                'callback' => [$this, 'cleanProductAdditionalFields'],
               ],
               [
                 'invalid' => 'Additional fields values invalid.'
@@ -202,8 +193,8 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('hostname', new sfValidatorString(['required' => true]));
     $this->setValidator('ns1prefix', new sfValidatorString(['required' => true]));
     $this->setValidator('ns2prefix', new sfValidatorString(['required' => true]));
-    $passwordRequired = empty($this->options['productParams']->rootpw);
-    $this->setValidator('rootpw', new sfValidatorString(['required' => $passwordRequired]));
+    $currentPassword = $this->getObject()->getParamValue('rootpw');
+    $this->setValidator('rootpw', new sfValidatorString(['required' => !$currentPassword]));
   }
 
   /**
@@ -216,7 +207,7 @@ class CartProductForm extends BaseCartProductForm
     $this->parseAdditionalFields();
     $this->mergePostValidator(new sfValidatorCallback(
             [
-                'callback' => [$this, 'cleanDomainAdditionalFields'],
+                'callback' => [$this, 'cleanProductAdditionalFields'],
             ],
             [
                 'invalid' => 'Additional fields values invalid.'
@@ -244,7 +235,11 @@ class CartProductForm extends BaseCartProductForm
     $this->setWidget('nameserver2', new sfWidgetFormInputText(['label' => 'Nameserver 2']));
     $this->setWidget('nameserver3', new sfWidgetFormInputText(['label' => 'Nameserver 3']));
     $this->setWidget('nameserver4', new sfWidgetFormInputText(['label' => 'Nameserver 4']));
-    $this->fillContactWidgets();
+    if(!$this->getObject()->getParamValue('contactid'))
+    {
+      // Show contact fields only if contact is not created yet
+      $this->fillContactWidgets();
+    }
   }
 
   /**
@@ -266,7 +261,10 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('nameserver2', new sfValidatorString());
     $this->setValidator('nameserver3', new sfValidatorString());
     $this->setValidator('nameserver4', new sfValidatorString());
-    $this->fillContactValidators();
+    if(!$this->getObject()->getParamValue('contactid'))
+    {
+      $this->fillContactValidators();
+    }
   }
 
   /**
@@ -340,19 +338,19 @@ class CartProductForm extends BaseCartProductForm
     return $cart->getId();
   }
 
-  public function cleanServerAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
+  /**
+   * Post validator callback
+   * Clean product additional fields in provided values
+   *
+   * @param sfValidatorBase $validator
+   * @param array $values
+   * @param array $arguments
+   * @return array
+   */
+  public function cleanProductAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
   {
     $values = $this->combineAdditionalFields(
-      PluginWhmcsConnection::getServerAdditionalFields(),
-      $values
-    );
-    return $values;
-  }
-
-  public function cleanDomainAdditionalFields(sfValidatorBase $validator, array $values, array $arguments)
-  {
-    $values = $this->combineAdditionalFields(
-      PluginWhmcsConnection::getDomainAdditionalFields(),
+      $this->getObject()->getAdditionalFieldKeys(),
       $values
     );
     return $values;
@@ -367,11 +365,40 @@ class CartProductForm extends BaseCartProductForm
    */
   protected function combineAdditionalFields($fieldsList, $values)
   {
+    $values['params'] = json_encode($this->generateParamsAndUnsetValues($fieldsList, $values));
+    return $values;
+  }
+
+  /**
+   * Generate params for each of provided fields (with nesting) and unset them from values array
+   *
+   * @param $fieldsList
+   * @param $values
+   * @return array
+   */
+  protected function generateParamsAndUnsetValues($fieldsList, &$values)
+  {
     $result = [];
-    foreach ($fieldsList as $field)
+    foreach ($fieldsList as $key => $field)
     {
+      // Separate logic for sub-entities
+      if(is_array($field))
+      {
+        // Fill in default value based on array key
+        $result[$key] = $this->getObject()->getParamValue($key);
+
+        $subResult = $this->generateSubEntitiesParamsAndUnsetValues($field, $values, $key);
+        if(!empty($subResult))
+        {
+          // Save new result in case it not empty
+          $result[$key] = $subResult;
+        }
+        // Proceed to the next field
+        continue;
+      }
+
       // Fill in default value
-      $result[$field] = (!empty($this->options['productParams']->$field))? $this->options['productParams']->$field : null;
+      $result[$field] = $this->getObject()->getParamValue($field);
 
       if(!empty($values[$field]))
       {
@@ -381,19 +408,83 @@ class CartProductForm extends BaseCartProductForm
         unset($values[$field]);
       }
     }
-    // Save result into params
-    $values['params'] = json_encode($result);
-    return $values;
+    return $result;
   }
+
+  /**
+   * Generate params for provided sub entity and unset used params from values
+   *
+   * @param $fields
+   * @param $values
+   * @param $key
+   * @return null|SimpleXmlElement
+   */
+  protected function generateSubEntitiesParamsAndUnsetValues($fields, &$values, $key)
+  {
+    $result = null;
+    switch($key)
+    {
+      // TODO: Add contact constant
+      case 'contactid':
+        if(!$this->getObject()->getParamValue('contactid'))
+        {
+          $result = $this->createContact($values, $fields);
+          $values = $this->unsetContactFields($values);
+        }
+        break;
+    }
+    return $result;
+  }
+
 
   /**
    * Parse additional field provided in Params and set default values for each of them
    */
   protected function parseAdditionalFields()
   {
-    foreach($this->options['productParams'] as $paramKey => $paramValue)
+    foreach($this->getObject()->getDecodedParams() as $field => $value)
     {
-      $this->setDefault($paramKey, $paramValue);
+      $this->setDefault($field, $value);
     }
+  }
+
+  /**
+   * Unset contact fields from provided array
+   *
+   * @param $values
+   */
+  protected function unsetContactFields($values)
+  {
+    foreach (PluginWhmcsConnection::getContactFields() as $contactField)
+    {
+      if(isset($values[$contactField]))
+      {
+        unset($values[$contactField]);
+      }
+    }
+    return $values;
+  }
+
+  /**
+   * Create WHMCS contact based on provided values and field keys
+   *
+   * @param $values
+   * @param $fields
+   * @return SimpleXmlElement
+   */
+  protected function createContact($values, $fields)
+  {
+    $params = [];
+    foreach ($fields as $contactField)
+    {
+      if(!empty($values[$contactField]))
+      {
+        $params[$contactField] = $values[$contactField];
+      }
+    }
+    // Fill in required client ID parameter from current cart.
+    $params['clientid'] = $this->options['user']->getCart()->getClientId();
+    // TODO: Bug exists. Client Id might be null. Logic might need to be moved to create order method
+    return PluginWhmcsConnection::initConnection()->createContact($params);
   }
 }
