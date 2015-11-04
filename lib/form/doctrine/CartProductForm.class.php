@@ -221,12 +221,6 @@ class CartProductForm extends BaseCartProductForm
    */
   protected function fillDomainWidgets()
   {
-    // A hidden input might be required in case contact is already created
-    //contactid - the ID of a contact to use for the domain registrant details
-
-    // Domain fields might be required for order creation. A hidden validator might be needed here.
-    //domainfields - a base64 encoded serialized array of the TLD specific field values
-
     $this->setWidget('domain', new sfWidgetFormInputText(['label' => 'Domain name']));
 
     $this->setWidget('dnsmanagement', new sfWidgetFormInputCheckbox(['label' => 'Enable DNS Management']));
@@ -247,13 +241,18 @@ class CartProductForm extends BaseCartProductForm
    */
   protected function fillDomainValidators()
   {
-    // Required Post validator might be needed here
-    //contactid - the ID of a contact to use for the domain registrant details
-
-    // In case domain field are required for order creation a required validator is needed here
-    //domainfields - a base64 encoded serialized array of the TLD specific field values
-
-    $this->setValidator('domain', new sfValidatorString());
+    $this->setValidator(
+      'domain',
+      new sfValidatorCallback(
+          [
+              'callback' => [
+                $this,
+                'domainWhoisValidator'
+              ],
+          ],
+          ['invalid' => 'Domain name is not available']
+      )
+    );
 
     $this->setValidator('dnsmanagement', new sfValidatorBoolean());
     $this->setValidator('emailforwarding', new sfValidatorBoolean());
@@ -486,5 +485,32 @@ class CartProductForm extends BaseCartProductForm
     $params['clientid'] = $this->options['user']->getCart()->getClientId();
     // TODO: Bug exists. Client Id might be null. Logic might need to be moved to create order method
     return PluginWhmcsConnection::initConnection()->createContact($params);
+  }
+
+  /**
+   * Domain name WHOIS validator. Adds invalid error in case domain name is not available
+   *
+   * @param $validator
+   * @param $value
+   * @return mixed
+   * @throws sfValidatorError
+   */
+  public function domainWhoisValidator($validator, $value)
+  {
+    $domain = $value;
+
+    // Add TLD to domain name value
+    // TODO: Make it DRY. Logic might need to be moved to CartProduct or ShopProduct class
+    $tld = $this->getObject()->getShopProduct()->name;
+    $domain .= $tld;
+
+    // Check availability via WHMCS API
+    $isAvailable = PluginWhmcsConnection::initConnection()->isDomainAvailable($domain);
+    if ($isAvailable ) {
+      return $value;
+    } else {
+      $validator->setMessage('invalid', sprintf('Domain name %s is not available', $domain));
+      throw new sfValidatorError($validator, 'invalid');
+    }
   }
 }

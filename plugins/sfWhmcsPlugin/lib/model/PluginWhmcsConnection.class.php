@@ -364,4 +364,10 @@ class PluginWhmcsConnection
     }
     return null;
   }
+
+  public function isDomainAvailable($domain)
+  {
+    $result = $this->apiCall('WHMCS_Misc', 'domain_whois', ['domain' => $domain]);
+    return (!empty($result) && $result->status == 'available');
+  }
 }
