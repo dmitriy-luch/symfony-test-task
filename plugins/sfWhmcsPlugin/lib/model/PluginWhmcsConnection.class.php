@@ -35,6 +35,11 @@ class PluginWhmcsConnection
   protected $client = false;
 
   /**
+   * @var sfRedis Redit object
+   */
+  protected $redis = false;
+
+  /**
    * Class constructor
    *
    * @param array $params An optional array of connection details.
@@ -45,6 +50,7 @@ class PluginWhmcsConnection
    *  domain   - The domain where WHMCS is installed
    *  api_path - The relative path on WHMCS website
    *  currencies_class - Currencies list instance class
+   *  currencies_cache_expiration - Currencies object cache expiration in seconds
    *
    * @throws Exception When params are not an array
    */
@@ -62,6 +68,8 @@ class PluginWhmcsConnection
       'domain' => sfConfig::get('app_whmcs_domain', 'localhost'),
       'api_path' => sfConfig::get('app_whmcs_api_path', 'includes/api.php'),
       'currencies_class' => sfConfig::get('app_whmcs_currencies_class', 'PluginWhmcsCurrencies'),
+      // Using config value or 30 days (60 * 60 * 24 * 30)
+      'currencies_cache_expiration' => sfConfig::get('app_whmcs_currencies_cache_expiration', 60 * 60 * 24 * 30),
     ];
     // Override connection params with the provided ones
     $config = array_merge(
@@ -76,6 +84,9 @@ class PluginWhmcsConnection
     // Password is provided as the md5 hash
     define('WHMCS_PASSWORD', md5($config['password'])); // md5 hash
     $this->config = $config;
+
+    // Saving redis client object locally for further usage
+    $this->redis = sfRedis::getClient();
   }
 
   /**
@@ -119,9 +130,18 @@ class PluginWhmcsConnection
    */
   public function getCurrencies($reload = false)
   {
-    if ($reload || !$this->currencies)
+    if ($reload || (!$this->currencies && !$this->redis->get('currencies')))
     {
-      $this->loadCurrencies();
+      // Load currencies directly from WHMCS when
+      // there are no currencies stored locally and in Redis
+      // or when Reload is set to true
+      return $this->loadCurrencies();
+    }
+    elseif (!$this->currencies && $redisCurrencies = $this->redis->get('currencies'))
+    {
+      // Use redis currencies only if no local currencies exist to save some memory
+      // TODO: Make sure storing local variable is better than using Redis
+      $this->currencies = unserialize($redisCurrencies);
     }
     return $this->currencies;
   }
@@ -134,20 +154,23 @@ class PluginWhmcsConnection
   protected function loadCurrencies()
   {
     $currencies = $this->apiCall('WHMCS_Misc', 'get_currencies');
-    if (!$currencies)
-    {
-      $this->currencies = new $this->config['currencies_class']([]);
-    }
-
-    if(!isset($currencies->currencies) || !isset($currencies->currencies->currency))
+    if (empty($currencies->currencies->currency))
     {
       // TODO: Log error. Some error occurred. No currencies provided by WHMCS
-      $this->currencies = new $this->config['currencies_class']([]);
-      return false;
+      $currenciesWrapper = new $this->config['currencies_class']([]);
     }
-    // Save currencies array in the current connection instance
-    $this->currencies = new $this->config['currencies_class']($currencies->currencies->currency);
-    return true;
+    else
+    {
+      $currenciesWrapper = new $this->config['currencies_class']($currencies->currencies->currency);
+    }
+    // Save currencies array into Redis cache
+    $this->redis->set('currencies', serialize($currenciesWrapper));
+    // Set currencies expiration based on config value
+    $this->redis->expire('currencies', $this->config['currencies_cache_expiration']);
+    // Save currencies array in the current connection instance for further usage in current app run
+    $this->currencies = $currenciesWrapper;
+
+    return $this->currencies;
   }
 
   /**
@@ -202,6 +225,11 @@ class PluginWhmcsConnection
       // TODO: Log error. Request issues
       return false;
     }
+    // Stupid hack to convert SimpleXmlElement to StdClass
+    // TODO: Make sure this does not brake anything
+    // TODO: Check if iteration through each element and creating StdClass manually is better
+    // TODO: Check if there is a better solution to manipulate SimpleXmlElements with Redis cache
+    $apiResult = json_decode(json_encode($apiResult));
     return $apiResult;
   }
 
