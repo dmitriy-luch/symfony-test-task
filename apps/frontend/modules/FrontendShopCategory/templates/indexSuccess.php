@@ -6,11 +6,9 @@
                 <li>
                     <a href="<?= url_for('category', $category); ?>">
                         <?= $category->getName() ?>
-                        <?php if($currentCurrency && $category->getCheapestPrice($sf_user->getCurrencyId())): ?>
                         <span>
-                            <?= __('Price starts from')?> <?= $category->getCheapestPrice($sf_user->getCurrencyId()) ?> <?= $currentCurrency->suffix?>
+                            <?= __('Price starts from')?> <?= $category->getCheapestPrice($sf_user->getCurrencyId()) ?> <?= $sf_user->getCurrencyObject()->suffix?>
                         </span>
-                        <?php endif;?>
                         <?= image_tag($category->getWebImagePath(true)); ?>
                     </a>
                 </li>
