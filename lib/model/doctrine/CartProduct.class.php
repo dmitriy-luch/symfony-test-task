@@ -28,10 +28,26 @@ class CartProduct extends BaseCartProduct
   {
     if(!$this->shopProduct)
     {
-      // Find ShopProduct in case no ShopProduct saved locally
-      $this->shopProduct = ShopProduct::findOneByTypeAndId($this->getType(), $this->getWhmcsPid());
+      $redis = sfRedis::getClient();
+      $this->shopProduct = unserialize($redis->hget('shopProduct', $this->getShopProductId()));
+      if (!$this->shopProduct)
+      {
+        // Find ShopProduct in case no ShopProduct saved locally nor in cache
+        $this->shopProduct = ShopProduct::findOneByTypeAndId($this->getType(), $this->getWhmcsPid());
+
+        // Saving shopProduct to Redis cache
+        $redis->hset('shopProduct', $this->getShopProductId(), serialize($this->shopProduct));
+        // Using config value or 30 days (60 * 60 * 24 * 30)
+        $shopProductExpiration = sfConfig::get('app_cache_expiration_shop_products', 60 * 60 * 24 * 30);
+        $redis->expire('shopProduct', $shopProductExpiration);
+      }
     }
     return $this->shopProduct;
+  }
+
+  public function getShopProductId()
+  {
+    return $this->getType() . $this->getWhmcsPid();
   }
 
   /**
