@@ -69,7 +69,7 @@ class PluginWhmcsConnection
       'api_path' => sfConfig::get('app_whmcs_api_path', 'includes/api.php'),
       'currencies_class' => sfConfig::get('app_whmcs_currencies_class', 'PluginWhmcsCurrencies'),
       // Using config value or 30 days (60 * 60 * 24 * 30)
-      'currencies_cache_expiration' => sfConfig::get('app_whmcs_currencies_cache_expiration', 60 * 60 * 24 * 30),
+      'currencies_cache_expiration' => sfConfig::get('app_cache_expiration_currencies', 60 * 60 * 24 * 30),
     ];
     // Override connection params with the provided ones
     $config = array_merge(
