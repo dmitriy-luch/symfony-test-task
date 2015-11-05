@@ -10,7 +10,8 @@ class myUser extends sfBasicSecurityUser
     parent::__construct($dispatcher, $storage, $options);
 
     $dispatcher = frontendConfiguration::getActive()->getEventDispatcher();
-    $dispatcher->connect('user.pre_change_culture', array($this, 'listenToPreChangeCultureEvent'));
+    $dispatcher->connect('user.pre_change_culture', [$this, 'listenToPreChangeCultureEvent']);
+    $dispatcher->connect('cartProduct.changed', [$this, 'listenToCartProductChangeMade']);
   }
 
   /**
@@ -90,6 +91,22 @@ class myUser extends sfBasicSecurityUser
     else
     {
       $this->setAttribute('historyCulture', $parameters['culture']);
+    }
+  }
+
+  /**
+   * Listener to CartProduct items changes
+   * Re-calculates cart total
+   *
+   * @param sfEvent $event
+   */
+  public function listenToCartProductChangeMade(sfEvent $event)
+  {
+    // TODO: Remove this check once changing of cart products is restricted to owner only
+    if($event->getSubject()->getCartId() == $this->getCart()->getId())
+    {
+      // TODO: Optimization required. Instead of re-calculation + or - can be used.
+      $this->getCart()->truncateCartTotal();
     }
   }
 

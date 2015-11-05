@@ -103,4 +103,48 @@ class CartProduct extends BaseCartProduct
     }
     return $additionalFieldKeys;
   }
+
+  /**
+   * Send Changed event after insert
+   * Used in Cart total recalculation
+   *
+   * @param $event
+   */
+  public function postInsert($event)
+  {
+    $this->sendChangedEvent();
+  }
+
+  /**
+   * Send Changed event after update
+   * Used in Cart total recalculation
+   *
+   * @param $event
+   */
+  public function postUpdate($event)
+  {
+    $this->sendChangedEvent();
+  }
+
+  /**
+   * Send Changed event after delete
+   * Used in Cart total recalculation
+   *
+   * @param $event
+   */
+  public function postDelete($event)
+  {
+    $this->sendChangedEvent();
+  }
+
+  /**
+   * Send Changed event
+   * Used in Cart total recalculation
+   */
+  protected function sendChangedEvent()
+  {
+    // TODO: Split into separate events
+    $dispatcher = ProjectConfiguration::getActive()->getEventDispatcher();
+    $dispatcher->notify(new sfEvent($this, 'cartProduct.changed'));
+  }
 }

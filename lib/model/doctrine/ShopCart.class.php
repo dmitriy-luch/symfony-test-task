@@ -33,6 +33,14 @@ class ShopCart extends BaseShopCart
   }
 
   /**
+   * Truncate cart totals array so that it will be re-calculated once needed
+   */
+  public function truncateCartTotal()
+  {
+    $this->cartTotal = [];
+  }
+
+  /**
    * Calculate Cart total ammount for a currency and save it locally
    *
    * @param $currencyId
