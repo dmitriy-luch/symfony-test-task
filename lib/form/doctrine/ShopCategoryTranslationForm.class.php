@@ -20,9 +20,9 @@ class ShopCategoryTranslationForm extends BaseShopCategoryTranslationForm
           'min'      => 1
       ));
     }
-    $this->mergePostValidator(new sfValidatorDoctrineUniqueI18n(
+    $this->mergePostValidator(new sfValidatorDoctrineUnique(
                 [
-                    'model' => 'ShopCategory',
+                    'model' => 'ShopCategoryTranslation',
                     'column' => ['name', 'lang'],
                 ],
                 [
