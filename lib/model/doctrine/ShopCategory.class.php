@@ -126,17 +126,30 @@ class ShopCategory extends BaseShopCategory
    * @param $currency WHMCS Currency ID
    * @return mixed Price
    */
-  public function getCheapestPrice($currency)
+  public function getCheapestPrice($currencyId, $reload = false)
   {
+    $redis = sfRedis::getClient();
+    $cheapestPrice = $redis->hget('categoryPrice' . $this->getId(), $currencyId);
+    if (!$reload && !empty($cheapestPrice))
+    {
+      return $cheapestPrice;
+    }
+
     $config = [
         'groups' => $this->getGroupIds(),
         'domains' => $this->getIncludeDomains(),
-        'currency' => $currency,
+        'currency' => $currencyId,
     ];
 
     $result = Doctrine::getTable('WhmcsPrice')->getCheapestProductsPrices($config);
     $cheapest = reset($result);
-    // TODO: Save value to cache for further usage
+
+    // Saving cheapest price to Redis cache
+    $redis->hset('categoryPrice' . $this->getId(), $currencyId, $cheapest);
+    // Using config value or 30 days (60 * 60 * 24 * 30)
+    $categoryCheapestPricesExpiration = sfConfig::get('app_cache_expiration_category_cheapest_prices', 60 * 60 * 24 * 30);
+    $redis->expire('categoryPrice', $categoryCheapestPricesExpiration);
+
     return $cheapest;
   }
 
