@@ -43,7 +43,8 @@ abstract class BaseCategoryRelations extends sfDoctrineRecord
         parent::setUp();
         $this->hasOne('ShopCategory', array(
              'local' => 'category_id',
-             'foreign' => 'id'));
+             'foreign' => 'id',
+             'onDelete' => 'CASCADE'));
 
         $this->hasOne('ShopGroup', array(
              'local' => 'whmcs_gid',

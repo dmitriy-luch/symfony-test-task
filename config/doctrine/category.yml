@@ -45,6 +45,7 @@ CategoryRelations:
       local: category_id
       foreign: id
       foreignAlias: CategoryRelations
+      onDelete: CASCADE
     ShopGroup:
       local: whmcs_gid
       foreign: id

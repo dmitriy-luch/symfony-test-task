@@ -73,6 +73,7 @@ abstract class BaseCartProduct extends sfDoctrineRecord
 
         $this->hasOne('ShopCart', array(
              'local' => 'cart_id',
-             'foreign' => 'id'));
+             'foreign' => 'id',
+             'onDelete' => 'CASCADE'));
     }
 }
