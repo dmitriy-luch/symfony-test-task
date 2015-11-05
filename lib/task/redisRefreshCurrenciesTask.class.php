@@ -9,7 +9,7 @@ class redisRefreshCurrenciesTask extends sfBaseTask
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
-    $this->namespace        = 'project';
+    $this->namespace        = 'redis';
     $this->name             = 'redisRefreshCurrencies';
     $this->briefDescription = 'Refresh Currencies';
     $this->detailedDescription = <<<EOF
