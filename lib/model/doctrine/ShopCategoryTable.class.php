@@ -27,7 +27,7 @@ class ShopCategoryTable extends Doctrine_Table
      */
     public function removeSpecials()
     {
-        $query = Doctrine_Query::create()
+        $query = $this->createQuery('c')
             ->update(self::TABLE_NAME . " c")
             ->set('c.special', '?', 0)
             ->where('c.special = ?', 1);
