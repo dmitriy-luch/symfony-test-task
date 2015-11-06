@@ -82,6 +82,7 @@ class ShopCartActions extends sfActions
 
   public function executeUpdateCart(sfWebRequest $request)
   {
+    $this->isExistingCustomer = $request->getParameter('existing');
     $cart = $this->getCartOrRedirect();
     $this->form = new ShopCartForm(
       $cart,
@@ -89,6 +90,7 @@ class ShopCartActions extends sfActions
         'request' => $this->getRequest(),
         'response' => $this->getResponse(),
         'user' => $this->getUser(),
+        'isExistignCustomer' => $this->isExistingCustomer,
       ]
     );
     if($params = $request->getParameter($this->form->getName()))
@@ -97,8 +99,10 @@ class ShopCartActions extends sfActions
       if($this->form->isValid())
       {
         $this->form->save();
+        $this->getUser()->setFlash('success', 'Cart updated successfully');
         $this->redirect('billing');
       }
+      $this->getUser()->setFlash('warning', 'Cart update failed. Please try again');
     }
   }
 
@@ -131,6 +135,13 @@ class ShopCartActions extends sfActions
     }
   }
 
+  /**
+   * Get current user cart when there is at least one product added
+   * Redirect to homepage and add flash message otherwise
+   *
+   * @return mixed
+   * @throws sfStopException
+   */
   protected function getCartOrRedirect()
   {
     $cart = $this->getUser()->getCart($this->getRequest());
