@@ -154,6 +154,7 @@ class ShopProduct
    *
    * @param $prices array List of prices for currency
    * @return array Parsed prices
+   * @throws Exception when no currency exist for product currency id
    */
   protected function parseDomainPrices($prices)
   {

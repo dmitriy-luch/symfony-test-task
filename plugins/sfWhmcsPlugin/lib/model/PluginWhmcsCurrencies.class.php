@@ -26,7 +26,7 @@ class PluginWhmcsCurrencies implements Iterator
     // If provided currencies are not an array or not an object - throw exception
     if(!is_array($currencies) && !is_object($currencies))
     {
-      throw new Exception('Currencies should be provided in an array or as a SimpleXmlElement.');
+      throw new Exception('Currencies should be provided in an array or as an StdClass.');
     }
     // Currencies list is empty by default
     $this->currencies = [];
@@ -61,7 +61,7 @@ class PluginWhmcsCurrencies implements Iterator
    * Find currency by code.
    *
    * @param string $code Currency code
-   * @return SimpleXmlElement\null
+   * @return StdClass|null
    */
   public function findByCode($code)
   {

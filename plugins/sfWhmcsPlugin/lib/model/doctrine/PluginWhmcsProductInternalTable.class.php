@@ -53,6 +53,11 @@ class PluginWhmcsProductInternalTable extends Doctrine_Table
           ->fetchOne([], Doctrine_Core::HYDRATE_ARRAY);
     }
 
+    /**
+     * Generate query with prices in a way required by ShopProduct class
+     *
+     * @return Doctrine_Query
+     */
     protected function findWithPricesQuery()
     {
       return $this->createQuery('pr')

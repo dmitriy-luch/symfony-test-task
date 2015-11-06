@@ -16,25 +16,4 @@ class PageTable extends Doctrine_Table
   {
     return Doctrine_Core::getTable('Page');
   }
-
-  /**
-   * @deprecated due to problems with i18n URLs
-   * Left for possibility to use it once i18n URLs issue is fixed
-   */
-  public function findOneByUrl($parameters)
-  {
-    throw new Exception('Deprecated method');
-    if (!isset($parameters['url']) || !isset($parameters['sf_culture'])) {
-        // Nothing to search for
-        return null;
-    }
-    $culture = $parameters['sf_culture'];
-    $url = $parameters['url'];
-    $q = $this->createQuery('a')
-        ->innerJoin('a.Translation t')
-        ->andWhere('t.lang = ?', $culture)
-        ->andWhere('t.url = ?', $url);
-    return $q->fetchOne();
-  }
-
 }

@@ -150,6 +150,7 @@ class PluginWhmcsConnection
    * Load list of WHMCS currencies and save into the object
    *
    * @return bool Whether the load was successful or not
+   * @throws Exception When no currencies found
    */
   protected function loadCurrencies()
   {
@@ -191,6 +192,7 @@ class PluginWhmcsConnection
    * Load list of WHMCS payment methods and save into the object
    *
    * @return bool Whether the load was successful or not
+   * @throws Exception When no payment methods found
    */
   protected function loadPaymentMethods()
   {
@@ -390,6 +392,12 @@ class PluginWhmcsConnection
     return null;
   }
 
+  /**
+   * Check if domain name is available for registration
+   *
+   * @param $domain
+   * @return bool
+   */
   public function isDomainAvailable($domain)
   {
     $result = $this->apiCall('WHMCS_Misc', 'domain_whois', ['domain' => $domain]);
