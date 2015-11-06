@@ -502,12 +502,7 @@ class CartProductForm extends BaseCartProductForm
    */
   public function domainWhoisValidator($validator, $value)
   {
-    $domain = $value;
-
-    // Add TLD to domain name value
-    // TODO: Make it DRY. Logic might need to be moved to CartProduct or ShopProduct class
-    $tld = $this->getObject()->getShopProduct()->name;
-    $domain .= $tld;
+    $domain = $this->getObject()->getDomainNameWithTld($value);
 
     // Check availability via WHMCS API
     $isAvailable = PluginWhmcsConnection::initConnection()->isDomainAvailable($domain);

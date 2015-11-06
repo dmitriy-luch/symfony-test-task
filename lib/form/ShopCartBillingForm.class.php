@@ -110,7 +110,7 @@ class ShopCartBillingForm extends sfForm
   protected function generateDomainParams($cartProduct)
   {
     return [
-      'domain' => $cartProduct->getParamValue('domain').$cartProduct->getShopProduct()->name,
+      'domain' => $cartProduct->getDomainNameWithTld(),
       'domaintype' => "register",
       'regperiod' => $cartProduct->getPeriod(),
     ];

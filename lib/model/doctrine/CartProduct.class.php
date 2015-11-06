@@ -163,4 +163,27 @@ class CartProduct extends BaseCartProduct
     $dispatcher = ProjectConfiguration::getActive()->getEventDispatcher();
     $dispatcher->notify(new sfEvent($this, 'cartProduct.changed'));
   }
+
+  /**
+   * Get domain name with TLD for the current product from params (or from provided domain)
+   *
+   * @param string $domain
+   * @return string
+   * @throws Exception When incorrect product type is used for domain name retrieval
+   */
+  public function getDomainNameWithTld($domain = null)
+  {
+    if($this->getType() != ShopProduct::TYPE_DOMAIN)
+    {
+      throw new Exception('Only Domain products can have a domain name.');
+    }
+    if(!$domain)
+    {
+      // Use domain name from object Params when no domain is provided
+      $domain = $this->getParamValue('domain');
+    }
+
+    // Add Shop product name (which is .tld) to the end of domain
+    return $domain . $this->getShopProduct()->name;
+  }
 }
