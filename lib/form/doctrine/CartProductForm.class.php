@@ -221,7 +221,7 @@ class CartProductForm extends BaseCartProductForm
    */
   protected function fillDomainWidgets()
   {
-    $this->setWidget('domain', new sfWidgetFormInputText(['label' => 'Domain name']));
+    $this->setWidget('domain', new sfWidgetFormInputText(['label' => 'Domain name (without TLD)']));
 
     $this->setWidget('dnsmanagement', new sfWidgetFormInputCheckbox(['label' => 'Enable DNS Management']));
     $this->setWidget('emailforwarding', new sfWidgetFormInputCheckbox(['label' => 'Enable Email Forwarding']));
@@ -243,14 +243,22 @@ class CartProductForm extends BaseCartProductForm
   {
     $this->setValidator(
       'domain',
-      new sfValidatorCallback(
-          [
-              'callback' => [
-                $this,
-                'domainWhoisValidator'
+      new sfValidatorAnd(
+        [
+          new sfValidatorRegex(['pattern' => '/^[a-zA-Z0-9\-]+$/'], ['invalid' => 'Provided domain name is invalid']),
+          new sfValidatorCallback(
+              [
+                  'callback' => [
+                      $this,
+                      'domainWhoisValidator'
+                  ],
               ],
-          ],
-          ['invalid' => 'Domain name is not available']
+              ['invalid' => 'Domain name is not available']
+          )
+        ],
+        [
+          'halt_on_error' => true,
+        ]
       )
     );
 
