@@ -156,13 +156,11 @@ class PluginWhmcsConnection
     $currencies = $this->apiCall('WHMCS_Misc', 'get_currencies');
     if (empty($currencies->currencies->currency))
     {
-      // TODO: Log error. Some error occurred. No currencies provided by WHMCS
-      $currenciesWrapper = new $this->config['currencies_class']([]);
+      throw new Exception('No currencies found in WHMCS');
     }
-    else
-    {
-      $currenciesWrapper = new $this->config['currencies_class']($currencies->currencies->currency);
-    }
+
+    $currenciesWrapper = new $this->config['currencies_class']($currencies->currencies->currency);
+
     // Save currencies array into Redis cache
     $this->redis->set('currencies', serialize($currenciesWrapper));
     // Set currencies expiration based on config value

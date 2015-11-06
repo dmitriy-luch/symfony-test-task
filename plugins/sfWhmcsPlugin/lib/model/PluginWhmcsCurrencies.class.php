@@ -81,6 +81,16 @@ class PluginWhmcsCurrencies implements Iterator
     return null;
   }
 
+  /**
+   * Return first currency from array or null if none found
+   *
+   * @return null|StdClass Currency item
+   */
+  public function getFirstCurrency()
+  {
+    return isset($this->currencies[0])? $this->currencies[0] : null;
+  }
+
 
   // Iterator interface methods
   public function rewind()

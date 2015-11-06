@@ -36,14 +36,7 @@ class myUser extends sfBasicSecurityUser
    */
   public function getCurrencyId()
   {
-    $currency = PluginWhmcsConnection::initConnection()->getCurrencies()->findByCode($this->getCurrency());
-    if(!$currency)
-    {
-      // No WHMCS currency found.
-      // TODO: Consider changing user currency at this point
-      return null;
-    }
-    return (int)$currency->id;
+    return (int)$this->getCurrencyObject()->id;
   }
 
   /**
@@ -204,15 +197,21 @@ class myUser extends sfBasicSecurityUser
   }
 
   /**
-   * Get Currency object based on currency ID
+   * Get Currency object based on currency ID or get first currency when none found
    *
    * @return mixed
    */
   public function getCurrencyObject()
   {
-    return PluginWhmcsConnection::initConnection()
-        ->getCurrencies()
-        ->findByCode($this->getCurrency());
+    $currencies = PluginWhmcsConnection::initConnection()
+        ->getCurrencies();
+    $currencyObject = $currencies->findByCode($this->getCurrency());
+    if(empty($currencyObject))
+    {
+      // Get first currency
+      $currencyObject = $currencies->reset();
+    }
+    return $currencyObject;
   }
 
   public function removeCart($response)
