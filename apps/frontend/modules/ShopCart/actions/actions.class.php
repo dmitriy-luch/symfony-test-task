@@ -127,10 +127,8 @@ class ShopCartActions extends sfActions
           $this->getUser()->removeCart($this->getResponse());
           $this->redirect('homepage');
         }
-        else
-        {
-          $this->getUser()->setFlash('error', 'Order creation failed. Please try again.');
-        }
+
+        $this->getUser()->setFlash('error', 'Order creation failed. Please try again.');
       }
     }
   }

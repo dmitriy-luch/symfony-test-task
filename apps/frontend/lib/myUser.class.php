@@ -56,12 +56,8 @@ class myUser extends sfBasicSecurityUser
    */
   public function listenToCartProductChangeMade(sfEvent $event)
   {
-    // TODO: Remove this check once changing of cart products is restricted to owner only
-    if($event->getSubject()->getCartId() == $this->getCart()->getId())
-    {
-      // TODO: Optimization required. Instead of re-calculation + or - can be used.
-      $this->getCart()->truncateCartTotal();
-    }
+    // TODO: Optimization required. Instead of re-calculation + or - can be used.
+    $this->getCart()->truncateCartTotal();
   }
 
   /**
