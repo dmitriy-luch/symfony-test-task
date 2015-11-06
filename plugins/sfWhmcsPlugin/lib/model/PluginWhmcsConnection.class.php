@@ -198,8 +198,7 @@ class PluginWhmcsConnection
     $paymentMethodsResult = $this->apiCall('WHMCS_Invoice', 'get_payment_methods');
     if (empty($paymentMethodsResult) || empty($paymentMethodsResult->paymentmethods) || empty($paymentMethodsResult->paymentmethods->paymentmethod))
     {
-      // TODO: Log error. Some error occurred. No payment methods provided by WHMCS
-      return false;
+      throw new Exception('No payment methods found in WHMCS');
     }
 
     foreach ($paymentMethodsResult->paymentmethods->paymentmethod as $paymentMethod)

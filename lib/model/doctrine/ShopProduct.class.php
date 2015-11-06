@@ -161,7 +161,8 @@ class ShopProduct
     $result = [];
     $currency = PluginWhmcsConnection::initConnection()->getCurrencies()->findById($prices['currency']);
     if(!$currency){
-      // TODO: Consider what to do next. Throw an exception probably
+      // TODO: Need to re-load currencies manually here first or ask admin to refresh them
+      throw new Exception('Failed to get currency for product currency ID.');
     }
     // Get all WHMCS Prices table fields that contain prices
     $priceFields = Doctrine::getTable('WhmcsPrice')->getPriceFields();

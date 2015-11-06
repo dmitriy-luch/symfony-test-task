@@ -60,7 +60,6 @@ class ShopCategoryTable extends Doctrine_Table
         {
             $query->limit($limit);
         }
-        // TODO: Save result to cache
         return $query->execute();
     }
 

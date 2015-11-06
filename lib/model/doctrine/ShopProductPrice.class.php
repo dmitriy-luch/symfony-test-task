@@ -15,13 +15,13 @@ class ShopProductPrice
   public function __construct($params)
   {
     if(
-        !isset($params['base'])
-        || !isset($params['billingPeriod'])
-        || !isset($params['currencySuffix'])
-        || !isset($params['type'])
+        empty($params['base'])
+        || empty($params['billingPeriod'])
+        || empty($params['currencySuffix'])
+        || empty($params['type'])
     )
     {
-      // TODO: Consider what to do next. Throw an exception probably
+      throw new Exception('Base, BillingPeriod, CurrencySuffix and Type params are required');
     }
 
     $this->billingPeriod = $params['billingPeriod'];
