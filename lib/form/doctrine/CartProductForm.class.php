@@ -331,9 +331,6 @@ class CartProductForm extends BaseCartProductForm
             'response' => $this->getOption('response'),
           ]
         );
-    if(!$cart){
-      // TODO: Add error to form if possible or throw an exception
-    }
     return $cart->getId();
   }
 

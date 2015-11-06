@@ -19,6 +19,8 @@ $(document).ready(function()
                 $('#cart').replaceWith($cartComponent);
                 $(document).scrollTop(0);
             }
+        }).error(function(data){
+            alert('Failed to add product. Please try again');
         });
         e.preventDefault();
     });

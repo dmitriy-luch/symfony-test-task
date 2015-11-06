@@ -138,12 +138,17 @@ class myUser extends sfBasicSecurityUser
    *
    * @param $response
    * @return ShopCart
+   * @throws Exception When cart creation failed
    */
   public function createCart($response)
   {
     // Create new cart
     $cart = new ShopCart();
     $cart->save();
+    if(!$cart)
+    {
+      throw new Exception('Cart creation failed.');
+    }
     $cartId = $cart->getId();
     // Save to session
     $this->setAttribute(self::SESSION_CART_KEY, $cart);
