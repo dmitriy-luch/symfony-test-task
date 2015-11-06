@@ -130,6 +130,7 @@ class CartProductForm extends BaseCartProductForm
           $this->fillProductWidgetsAndValidators();
           break;
       }
+      $this->parseAdditionalFields($this->getObject()->getDecodedParams());
     }
 
     $this->widgetSchema->setNameFormat(self::FORM_NAME . '[%s]');
@@ -158,7 +159,6 @@ class CartProductForm extends BaseCartProductForm
               ]
             )
           );
-          $this->parseAdditionalFields();
           break;
       }
     }
@@ -204,7 +204,6 @@ class CartProductForm extends BaseCartProductForm
   {
     $this->fillDomainWidgets();
     $this->fillDomainValidators();
-    $this->parseAdditionalFields();
     $this->mergePostValidator(new sfValidatorCallback(
             [
                 'callback' => [$this, 'cleanProductAdditionalFields'],
@@ -229,11 +228,7 @@ class CartProductForm extends BaseCartProductForm
     $this->setWidget('nameserver2', new sfWidgetFormInputText(['label' => 'Nameserver 2']));
     $this->setWidget('nameserver3', new sfWidgetFormInputText(['label' => 'Nameserver 3']));
     $this->setWidget('nameserver4', new sfWidgetFormInputText(['label' => 'Nameserver 4']));
-    if(!$this->getObject()->getParamValue('contactid'))
-    {
-      // Show contact fields only if contact is not created yet
-      $this->fillContactWidgets();
-    }
+    $this->fillContactWidgets();
   }
 
   /**
@@ -268,10 +263,7 @@ class CartProductForm extends BaseCartProductForm
     $this->setValidator('nameserver2', new sfValidatorString());
     $this->setValidator('nameserver3', new sfValidatorString());
     $this->setValidator('nameserver4', new sfValidatorString());
-    if(!$this->getObject()->getParamValue('contactid'))
-    {
-      $this->fillContactValidators();
-    }
+    $this->fillContactValidators();
   }
 
   /**
@@ -391,11 +383,11 @@ class CartProductForm extends BaseCartProductForm
         // Fill in default value based on array key
         $result[$key] = $this->getObject()->getParamValue($key);
 
-        $subResult = $this->generateSubEntitiesParamsAndUnsetValues($field, $values, $key);
+        $subResult = $this->generateParamsAndUnsetValues($field, $values);
         if(!empty($subResult))
         {
           // Save new result in case it not empty
-          $result[$key] = $subResult;
+          $result[$key] = array_merge((array)$result[$key], $subResult);
         }
         // Proceed to the next field
         continue;
@@ -415,81 +407,24 @@ class CartProductForm extends BaseCartProductForm
     return $result;
   }
 
+
   /**
-   * Generate params for provided sub entity and unset used params from values
+   * Parse additional fields provided in params and set default values for each of them
+   * Execute self for inner fields arrays
    *
-   * @param $fields
-   * @param $values
-   * @param $key
-   * @return null|SimpleXmlElement
+   * @param $fields array Fields list to parse
    */
-  protected function generateSubEntitiesParamsAndUnsetValues($fields, &$values, $key)
+  protected function parseAdditionalFields($fields)
   {
-    $result = null;
-    switch($key)
+    foreach($fields as $field => $value)
     {
-      // TODO: Add contact constant
-      case 'contactid':
-        if(!$this->getObject()->getParamValue('contactid'))
-        {
-          $result = $this->createContact($values, $fields);
-          $values = $this->unsetContactFields($values);
-        }
-        break;
-    }
-    return $result;
-  }
-
-
-  /**
-   * Parse additional field provided in Params and set default values for each of them
-   */
-  protected function parseAdditionalFields()
-  {
-    foreach($this->getObject()->getDecodedParams() as $field => $value)
-    {
+      if(is_array($value))
+      {
+        $this->parseAdditionalFields($value);
+        continue;
+      }
       $this->setDefault($field, $value);
     }
-  }
-
-  /**
-   * Unset contact fields from provided array
-   *
-   * @param $values
-   */
-  protected function unsetContactFields($values)
-  {
-    foreach (PluginWhmcsConnection::getContactFields() as $contactField)
-    {
-      if(isset($values[$contactField]))
-      {
-        unset($values[$contactField]);
-      }
-    }
-    return $values;
-  }
-
-  /**
-   * Create WHMCS contact based on provided values and field keys
-   *
-   * @param $values
-   * @param $fields
-   * @return SimpleXmlElement
-   */
-  protected function createContact($values, $fields)
-  {
-    $params = [];
-    foreach ($fields as $contactField)
-    {
-      if(!empty($values[$contactField]))
-      {
-        $params[$contactField] = $values[$contactField];
-      }
-    }
-    // Fill in required client ID parameter from current cart.
-    $params['clientid'] = $this->options['user']->getCart()->getClientId();
-    // TODO: Bug exists. Client Id might be null. Logic might need to be moved to create order method
-    return PluginWhmcsConnection::initConnection()->createContact($params);
   }
 
   /**

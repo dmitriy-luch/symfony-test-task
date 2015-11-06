@@ -78,8 +78,8 @@ class ShopCartBillingForm extends sfForm
 
     foreach($cartProduct->getDecodedParams() as $key => $additionalField)
     {
-      // Fill in the value in case it exists in Params and not yet field in the result
-      if(!empty($additionalField) && empty($result[$key]))
+      // Fill in the value in case it exists in Params, not a sub-array and not yet field in the result
+      if(!empty($additionalField) && !is_array($additionalField) && empty($result[$key]))
       {
         $result[$key] = $additionalField;
       }
@@ -109,10 +109,29 @@ class ShopCartBillingForm extends sfForm
    */
   protected function generateDomainParams($cartProduct)
   {
+    $contactDetails = $cartProduct->getParamValue('contact');
+    // Fill in required client ID parameter from current cart.
+    $contactParams = [
+        'clientid' => $this->options['user']->getCart()->getClientId()
+    ];
+    foreach (PluginWhmcsConnection::getContactFields() as $contactField)
+    {
+      if(!empty($contactDetails[$contactField]))
+      {
+        // Fill in other client parameters
+        $contactParams[$contactField] = $contactDetails[$contactField];
+      }
+    }
+    $contact = PluginWhmcsConnection::initConnection()->createContact($contactParams);
+    if(empty($contact))
+    {
+      // TODO: Consider what to do. Proceed further or throw an exception
+    }
     return [
       'domain' => $cartProduct->getDomainNameWithTld(),
       'domaintype' => "register",
       'regperiod' => $cartProduct->getPeriod(),
+      'contactid' => $contact,
     ];
   }
 }

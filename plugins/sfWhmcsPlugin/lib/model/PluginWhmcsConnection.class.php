@@ -346,7 +346,7 @@ class PluginWhmcsConnection
       'nameserver2',
       'nameserver3',
       'nameserver4',
-      'contactid' => self::getContactFields(),
+      'contact' => self::getContactFields(),
     ];
   }
 

@@ -85,7 +85,7 @@ class CartProduct extends BaseCartProduct
   public function getParamValue($field)
   {
     $params = $this->getDecodedParams();
-    return (!empty($params->$field) && !is_array($params->$field))? $params->$field : null;
+    return (!empty($params[$field]))? $params[$field] : null;
   }
 
   /**
@@ -93,7 +93,7 @@ class CartProduct extends BaseCartProduct
    */
   public function getDecodedParams()
   {
-    $result = json_decode($this->getParams());
+    $result = json_decode($this->getParams(), true);
     return ($result)? : [];
   }
 
