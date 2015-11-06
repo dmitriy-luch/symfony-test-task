@@ -10,7 +10,6 @@ class myUser extends sfBasicSecurityUser
     parent::__construct($dispatcher, $storage, $options);
 
     $dispatcher = frontendConfiguration::getActive()->getEventDispatcher();
-    $dispatcher->connect('user.pre_change_culture', [$this, 'listenToPreChangeCultureEvent']);
     $dispatcher->connect('cartProduct.changed', [$this, 'listenToCartProductChangeMade']);
   }
 
@@ -40,26 +39,6 @@ class myUser extends sfBasicSecurityUser
   }
 
   /**
-   * TODO: Check is this method is still required
-   *
-   * @param bool|true $clearHistory
-   * @return null
-   */
-  public function getHistoryCultrure($clearHistory = true)
-  {
-    $historyCulture = null;
-    if($this->hasAttribute('historyCulture'))
-    {
-      $historyCulture = $this->getAttribute('historyCulture');
-      if($clearHistory)
-      {
-        $this->setAttribute('historyCulture', null);
-      }
-    }
-    return $historyCulture;
-  }
-
-  /**
    * Set user currency in session
    *
    * @param $currency string
@@ -67,24 +46,6 @@ class myUser extends sfBasicSecurityUser
   public function setCurrency($currency)
   {
     $this->setAttribute('currency', $currency);
-  }
-
-  /**
-   * TODO: Check is this method is still required
-   *
-   * @param sfEvent $event
-   */
-  public function listenToPreChangeCultureEvent(sfEvent $event)
-  {
-    $parameters = $event->getParameters();
-    if(!isset($parameters['culture']))
-    {
-      // TODO: Log warning
-    }
-    else
-    {
-      $this->setAttribute('historyCulture', $parameters['culture']);
-    }
   }
 
   /**
